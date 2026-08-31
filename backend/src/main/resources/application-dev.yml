@@ -1,0 +1,4 @@
+logging:
+  level:
+    com.mdimpresiones.api: DEBUG
+    org.hibernate.SQL: DEBUG
