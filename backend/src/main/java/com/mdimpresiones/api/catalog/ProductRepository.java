@@ -9,7 +9,12 @@ import org.springframework.data.repository.query.Param;
 
 public interface ProductRepository extends JpaRepository<Product, Long> {
 
-    @EntityGraph(attributePaths = {"category", "specs", "images"})
+    /**
+     * Solo trae el rubro en el fetch: sumar specs e images haria que Hibernate
+     * intentara traer dos colecciones a la vez (MultipleBagFetchException).
+     * Ambas se cargan al mapear, dentro de la misma transaccion de lectura.
+     */
+    @EntityGraph(attributePaths = {"category"})
     Optional<Product> findBySlug(String slug);
 
     boolean existsBySlug(String slug);

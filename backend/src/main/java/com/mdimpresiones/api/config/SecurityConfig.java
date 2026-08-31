@@ -1,6 +1,7 @@
 package com.mdimpresiones.api.config;
 
 import com.mdimpresiones.api.security.JwtAuthenticationFilter;
+import jakarta.servlet.DispatcherType;
 import java.util.List;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -42,6 +43,9 @@ public class SecurityConfig {
                 .csrf(csrf -> csrf.disable())
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
+                        // Los reenvios internos a /error no vuelven a autorizarse: sin esto,
+                        // cualquier excepcion de un endpoint publico se veria como un 401.
+                        .dispatcherTypeMatchers(DispatcherType.ERROR, DispatcherType.FORWARD).permitAll()
                         // Sitio publico
                         .requestMatchers(HttpMethod.GET, "/api/categories/**", "/api/products/**",
                                 "/api/finishings/**", "/api/search", "/api/contact").permitAll()
