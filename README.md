@@ -54,6 +54,7 @@ docker-compose.yml   PostgreSQL para desarrollo local
 | `WHATSAPP_NUMBER`| vacío                                          | Número internacional sin signos (ej. `5493511234567`) |
 | `INSTAGRAM_URL`  | vacío                                          | Perfil de Instagram                  |
 | `CONTACT_EMAIL`  | vacío                                          | Mail de contacto                     |
+| `SITE_URL`       | vacío                                          | Dominio del sitio, sin barra final. Sin esto `/sitemap.xml` devuelve 404 |
 
 ## Panel de administración
 
@@ -63,6 +64,27 @@ y se imprime **una sola vez** en el log de arranque.
 
 Todo lo que escribe vive bajo `/api/admin/**` y exige el token que devuelve
 `POST /api/auth/login`, enviado como `Authorization: Bearer <token>`.
+
+## Antes de publicar
+
+Hay datos que el código deja explícitamente en blanco en lugar de inventarlos:
+
+1. **`frontend/src/config/empresa.ts`** — razón social, CUIT, domicilio, horario y
+   dominio. Mientras falten razón social y CUIT, las páginas legales muestran un
+   aviso visible de que están incompletas.
+2. **Variables de entorno** — `WHATSAPP_NUMBER`, `INSTAGRAM_URL`, `CONTACT_EMAIL`,
+   `SITE_URL`, y un `JWT_SECRET` propio de al menos 32 caracteres.
+3. **`frontend/public/video/`** — el video de portada y su poster.
+4. **Fotos** de productos y terminaciones, que se cargan desde el panel.
+
+Los términos y condiciones están redactados para una imprenta, pero **conviene que
+los revise un abogado** antes de publicarlos.
+
+### Servir la SPA
+
+El frontend es una aplicación de una sola página: el servidor tiene que devolver
+`index.html` para cualquier ruta que no sea un archivo, o `/productos/estuches`
+va a dar 404 al recargar.
 
 ## Flujo de trabajo con Git
 
