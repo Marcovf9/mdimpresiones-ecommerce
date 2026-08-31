@@ -55,6 +55,17 @@ public class QuoteRequest {
     @Column(name = "created_at", nullable = false, updatable = false)
     private Instant createdAt = Instant.now();
 
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false, length = 20)
+    private QuoteStatus status = QuoteStatus.PENDIENTE;
+
+    /** Notas del equipo sobre el pedido. Nunca se muestran al cliente. */
+    @Column(name = "internal_notes", columnDefinition = "text")
+    private String internalNotes;
+
+    @Column(name = "answered_at")
+    private Instant answeredAt;
+
     public Long getId() {
         return id;
     }
@@ -157,5 +168,29 @@ public class QuoteRequest {
 
     public void setCreatedAt(Instant createdAt) {
         this.createdAt = createdAt;
+    }
+
+    public QuoteStatus getStatus() {
+        return status;
+    }
+
+    public void setStatus(QuoteStatus status) {
+        this.status = status;
+    }
+
+    public String getInternalNotes() {
+        return internalNotes;
+    }
+
+    public void setInternalNotes(String internalNotes) {
+        this.internalNotes = internalNotes;
+    }
+
+    public Instant getAnsweredAt() {
+        return answeredAt;
+    }
+
+    public void setAnsweredAt(Instant answeredAt) {
+        this.answeredAt = answeredAt;
     }
 }

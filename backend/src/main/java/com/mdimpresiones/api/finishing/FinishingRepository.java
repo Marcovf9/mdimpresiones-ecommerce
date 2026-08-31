@@ -11,4 +11,7 @@ public interface FinishingRepository extends JpaRepository<Finishing, Long> {
     Optional<Finishing> findBySlug(String slug);
 
     boolean existsBySlug(String slug);
+
+    /** Terminaciones sin foto: la pagina las muestra con un placeholder. */
+    List<Finishing> findByImageUrlIsNullOrderByNameAsc();
 }
