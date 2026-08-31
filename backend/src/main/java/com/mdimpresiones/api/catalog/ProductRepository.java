@@ -23,6 +23,22 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
 
     List<Product> findByCategorySlugAndActiveTrueOrderByDisplayOrderAscNameAsc(String categorySlug);
 
+    long countByActiveTrue();
+
+    long countByActiveFalse();
+
+    /**
+     * Productos publicados a los que todavia les falta algo. Alimentan la
+     * seccion "Que mejorar" del panel, para que el dueno sepa donde trabajar.
+     */
+    @Query("SELECT p FROM Product p WHERE p.active = TRUE AND p.images IS EMPTY ORDER BY p.name")
+    List<Product> findActiveWithoutImages();
+
+    @Query("SELECT p FROM Product p WHERE p.active = TRUE AND p.specs IS EMPTY ORDER BY p.name")
+    List<Product> findActiveWithoutSpecs();
+
+    List<Product> findByActiveFalseOrderByNameAsc();
+
     /** Buscador del menu: por nombre, resumen o rubro. */
     @Query("""
             SELECT p FROM Product p
