@@ -49,6 +49,20 @@ docker-compose.yml   PostgreSQL para desarrollo local
 | `CORS_ORIGINS`   | `http://localhost:5173`                        | Orígenes permitidos, separados por coma |
 | `MEDIA_PATH`     | `./uploads`                                    | Carpeta de imágenes subidas          |
 | `JWT_SECRET`     | valor de desarrollo                            | **Obligatorio en producción** (mín. 32 caracteres) |
+| `ADMIN_USERNAME` | `admin`                                        | Usuario inicial del panel            |
+| `ADMIN_PASSWORD` | se genera al azar                              | Contraseña inicial del panel         |
+| `WHATSAPP_NUMBER`| vacío                                          | Número internacional sin signos (ej. `5493511234567`) |
+| `INSTAGRAM_URL`  | vacío                                          | Perfil de Instagram                  |
+| `CONTACT_EMAIL`  | vacío                                          | Mail de contacto                     |
+
+## Panel de administración
+
+La primera vez que arranca el backend, si la tabla `admin_users` está vacía se crea
+un usuario inicial. Si no definiste `ADMIN_PASSWORD`, la contraseña se genera al azar
+y se imprime **una sola vez** en el log de arranque.
+
+Todo lo que escribe vive bajo `/api/admin/**` y exige el token que devuelve
+`POST /api/auth/login`, enviado como `Authorization: Bearer <token>`.
 
 ## Flujo de trabajo con Git
 
