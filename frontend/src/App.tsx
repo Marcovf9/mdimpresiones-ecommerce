@@ -7,6 +7,8 @@ import { ProductDetailPage } from './pages/ProductDetailPage'
 import { FinishingsPage } from './pages/FinishingsPage'
 import { QuotePage } from './pages/QuotePage'
 import { NotFoundPage } from './pages/NotFoundPage'
+import { TerminosPage } from './pages/TerminosPage'
+import { PrivacidadPage } from './pages/PrivacidadPage'
 import { AdminApp } from './admin/AdminApp'
 
 export default function App() {
@@ -23,6 +25,8 @@ export default function App() {
           <Route path="/productos/:slug" element={<ProductDetailPage />} />
           <Route path="/terminaciones" element={<FinishingsPage />} />
           <Route path="/cotiza" element={<QuotePage />} />
+          <Route path="/terminos" element={<TerminosPage />} />
+          <Route path="/privacidad" element={<PrivacidadPage />} />
           <Route path="*" element={<NotFoundPage />} />
         </Route>
       </Routes>

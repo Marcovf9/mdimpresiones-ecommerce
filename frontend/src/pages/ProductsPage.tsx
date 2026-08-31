@@ -5,6 +5,7 @@ import type { Category, ProductSummary } from '../api/types'
 import { useApi } from '../hooks/useApi'
 import { ArrowRightIcon, ChevronDownIcon } from '../components/Icons'
 import { PageHeader, ErrorState, LoadingState } from '../components/PageChrome'
+import { usePageMeta } from '../hooks/usePageMeta'
 
 /**
  * Listado de rubros. En escritorio, pasar por encima de un rubro muestra sus
@@ -14,6 +15,13 @@ import { PageHeader, ErrorState, LoadingState } from '../components/PageChrome'
 export function ProductsPage() {
   const { data: categories, loading, error } = useApi<Category[]>(() => api.categories(), [])
   const [activeSlug, setActiveSlug] = useState<string | null>(null)
+
+  usePageMeta({
+    title: 'Productos',
+    description:
+      'Carpetas, tarjetas, folletos, catálogos, libros, talonarios, packaging y regalos empresariales. Materiales, formatos y terminaciones de cada producto.',
+    path: '/productos',
+  })
 
   if (loading) return <LoadingState label="Cargando productos" />
   if (error) return <ErrorState message={error} />
