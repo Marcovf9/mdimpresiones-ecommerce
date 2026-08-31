@@ -1,6 +1,7 @@
 import { useEffect } from 'react'
 import { Link, useLocation } from 'react-router-dom'
 import { ArrowRightIcon } from '../components/Icons'
+import { usePageMeta } from '../hooks/usePageMeta'
 
 /**
  * Texto institucional entregado por el cliente ("Quienes somos FINAL.docx").
@@ -15,6 +16,13 @@ const ABOUT_PARAGRAPHS = [
 
 export function HomePage() {
   const location = useLocation()
+
+  usePageMeta({
+    title: 'MD Impresiones',
+    description:
+      'Imprenta en Córdoba, Argentina. Más de 30 años imprimiendo: institucional, comercial, editorial, packaging, impresos numerados y regalos empresariales.',
+    path: '/',
+  })
 
   // El menu enlaza a /#quienes-somos: al llegar con ese hash, bajamos a la seccion.
   useEffect(() => {

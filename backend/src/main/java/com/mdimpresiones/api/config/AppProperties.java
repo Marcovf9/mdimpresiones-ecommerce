@@ -17,6 +17,9 @@ public class AppProperties {
     /** Prefijo de URL bajo el que se publican esas imagenes. */
     private String mediaPublicPath = "/media";
 
+    /** URL publica del sitio, sin barra final. Necesaria para el sitemap. */
+    private String publicUrl = "";
+
     private Jwt jwt = new Jwt();
 
     private Contact contact = new Contact();
@@ -103,6 +106,14 @@ public class AppProperties {
 
     public void setMediaPublicPath(String mediaPublicPath) {
         this.mediaPublicPath = mediaPublicPath;
+    }
+
+    public String getPublicUrl() {
+        return publicUrl;
+    }
+
+    public void setPublicUrl(String publicUrl) {
+        this.publicUrl = publicUrl;
     }
 
     public Jwt getJwt() {

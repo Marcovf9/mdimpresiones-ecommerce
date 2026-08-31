@@ -4,6 +4,7 @@ import type { Finishing } from '../api/types'
 import { useApi } from '../hooks/useApi'
 import { Modal } from '../components/Modal'
 import { ErrorState, LoadingState, PageHeader } from '../components/PageChrome'
+import { usePageMeta } from '../hooks/usePageMeta'
 
 /**
  * Grilla de terminaciones con el nombre debajo de cada imagen.
@@ -12,6 +13,13 @@ import { ErrorState, LoadingState, PageHeader } from '../components/PageChrome'
 export function FinishingsPage() {
   const { data: finishings, loading, error } = useApi<Finishing[]>(() => api.finishings(), [])
   const [selected, setSelected] = useState<Finishing | null>(null)
+
+  usePageMeta({
+    title: 'Terminaciones',
+    description:
+      'Plastificado OPP, barniz UV, UV sectorizado, hot stamping, troquelado, cuño en seco, plegado y más. Los acabados que distinguen una pieza impresa.',
+    path: '/terminaciones',
+  })
 
   if (loading) return <LoadingState label="Cargando terminaciones" />
   if (error) return <ErrorState message={error} />

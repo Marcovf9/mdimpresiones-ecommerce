@@ -6,6 +6,7 @@ import { useApi } from '../hooks/useApi'
 import { useContactInfo } from '../hooks/useContactInfo'
 import { PageHeader } from '../components/PageChrome'
 import { WhatsAppIcon } from '../components/Icons'
+import { usePageMeta } from '../hooks/usePageMeta'
 
 const EMPTY_FORM: QuoteFormValues = {
   fullName: '',
@@ -39,6 +40,13 @@ export function QuotePage() {
   const [status, setStatus] = useState<Status>({ kind: 'idle' })
   const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({})
   const [generalError, setGeneralError] = useState<string | null>(null)
+
+  usePageMeta({
+    title: 'Cotizá tu proyecto',
+    description:
+      'Contanos qué necesitás imprimir y te respondemos con un presupuesto a medida. Sin compromiso.',
+    path: '/cotiza',
+  })
 
   // Si llegamos desde la ficha de un producto, viene preseleccionado.
   useEffect(() => {

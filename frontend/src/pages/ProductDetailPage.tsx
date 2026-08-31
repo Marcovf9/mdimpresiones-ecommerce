@@ -5,6 +5,7 @@ import type { ProductDetail } from '../api/types'
 import { useApi } from '../hooks/useApi'
 import { ArrowRightIcon } from '../components/Icons'
 import { ErrorState, LoadingState } from '../components/PageChrome'
+import { usePageMeta } from '../hooks/usePageMeta'
 
 /** Ficha del producto: descripcion, fotos, ficha tecnica y boton de cotizacion. */
 export function ProductDetailPage() {
@@ -13,6 +14,18 @@ export function ProductDetailPage() {
     () => api.product(slug),
     [slug],
   )
+
+  // El hook se llama siempre, aunque el producto todavía no haya llegado:
+  // no puede quedar detrás de un return anticipado.
+  usePageMeta({
+    title: product?.name ?? 'Producto',
+    description:
+      product?.summary ??
+      product?.description?.slice(0, 160) ??
+      'Materiales, formatos y terminaciones disponibles. Pedí tu presupuesto sin compromiso.',
+    path: `/productos/${slug}`,
+    image: product?.images[0]?.url,
+  })
 
   if (loading) return <LoadingState label="Cargando el producto" />
   if (error) return <ErrorState message={error} />

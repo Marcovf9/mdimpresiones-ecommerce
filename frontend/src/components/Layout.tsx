@@ -1,8 +1,11 @@
 import { useEffect, useState } from 'react'
-import { Link, Outlet, useLocation } from 'react-router-dom'
+import { Link, NavLink, Outlet, useLocation } from 'react-router-dom'
 import { useContactInfo } from '../hooks/useContactInfo'
 import { InstagramIcon, MailIcon, MenuIcon, WhatsAppIcon } from './Icons'
 import { MenuOverlay } from './MenuOverlay'
+import { WhatsAppFab } from './WhatsAppFab'
+import { StructuredData } from './StructuredData'
+import { domicilioCompleto, EMPRESA } from '../config/empresa'
 
 export function Layout() {
   const [menuOpen, setMenuOpen] = useState(false)
@@ -56,6 +59,8 @@ export function Layout() {
       </main>
 
       <SiteFooter />
+      <WhatsAppFab />
+      <StructuredData />
     </div>
   )
 }
@@ -73,6 +78,10 @@ function SiteFooter() {
           <p className="mt-3 max-w-sm text-sm">
             Empresa gráfica familiar de Córdoba, Argentina. Más de 30 años imprimiendo ideas.
           </p>
+          {domicilioCompleto() && <p className="mt-3 text-sm">{domicilioCompleto()}</p>}
+          {EMPRESA.horarioAtencion && (
+            <p className="mt-1 text-sm">{EMPRESA.horarioAtencion}</p>
+          )}
         </div>
 
         <div className="sm:justify-self-end">
@@ -119,8 +128,18 @@ function SiteFooter() {
         </div>
       </div>
 
-      <div className="border-t border-white/10 py-6 text-center text-xs">
-        © {new Date().getFullYear()} MD Impresiones. Todos los derechos reservados.
+      <div className="border-t border-white/10 py-6">
+        <div className="mx-auto flex max-w-6xl flex-col items-center gap-3 px-6 text-xs sm:flex-row sm:justify-between">
+          <p>© {new Date().getFullYear()} MD Impresiones. Todos los derechos reservados.</p>
+          <nav aria-label="Enlaces legales" className="flex gap-4">
+            <NavLink to="/terminos" className="transition hover:text-white">
+              Términos y condiciones
+            </NavLink>
+            <NavLink to="/privacidad" className="transition hover:text-white">
+              Privacidad
+            </NavLink>
+          </nav>
+        </div>
       </div>
     </footer>
   )

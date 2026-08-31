@@ -1,6 +1,12 @@
 import { Link } from 'react-router-dom'
+import { usePageMeta } from '../hooks/usePageMeta'
 
 export function NotFoundPage() {
+  usePageMeta({
+    title: 'Página no encontrada',
+    description: 'La dirección que buscás no existe en el sitio de MD Impresiones.',
+  })
+
   return (
     <div className="grid min-h-[70dvh] place-items-center px-6 pt-24 text-center">
       <div>
