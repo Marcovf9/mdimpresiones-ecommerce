@@ -19,6 +19,8 @@ public class AppProperties {
 
     private Jwt jwt = new Jwt();
 
+    private Contact contact = new Contact();
+
     public static class Jwt {
         private String secret = "";
         private long expirationMinutes = 480;
@@ -37,6 +39,41 @@ public class AppProperties {
 
         public void setExpirationMinutes(long expirationMinutes) {
             this.expirationMinutes = expirationMinutes;
+        }
+    }
+
+    /** Datos de contacto de la imprenta, usados por el menu y por el cotizador. */
+    public static class Contact {
+
+        /** Numero de WhatsApp en formato internacional sin signos: 549351XXXXXXX. */
+        private String whatsappNumber = "";
+
+        private String instagramUrl = "";
+
+        private String email = "";
+
+        public String getWhatsappNumber() {
+            return whatsappNumber;
+        }
+
+        public void setWhatsappNumber(String whatsappNumber) {
+            this.whatsappNumber = whatsappNumber;
+        }
+
+        public String getInstagramUrl() {
+            return instagramUrl;
+        }
+
+        public void setInstagramUrl(String instagramUrl) {
+            this.instagramUrl = instagramUrl;
+        }
+
+        public String getEmail() {
+            return email;
+        }
+
+        public void setEmail(String email) {
+            this.email = email;
         }
     }
 
@@ -74,5 +111,13 @@ public class AppProperties {
 
     public void setJwt(Jwt jwt) {
         this.jwt = jwt;
+    }
+
+    public Contact getContact() {
+        return contact;
+    }
+
+    public void setContact(Contact contact) {
+        this.contact = contact;
     }
 }
