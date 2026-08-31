@@ -7,12 +7,16 @@ import { ProductDetailPage } from './pages/ProductDetailPage'
 import { FinishingsPage } from './pages/FinishingsPage'
 import { QuotePage } from './pages/QuotePage'
 import { NotFoundPage } from './pages/NotFoundPage'
+import { AdminApp } from './admin/AdminApp'
 
 export default function App() {
   return (
     <>
       <ScrollToTop />
       <Routes>
+        {/* El panel corre aparte: tiene su propio layout y su propia sesión. */}
+        <Route path="/admin/*" element={<AdminApp />} />
+
         <Route element={<Layout />}>
           <Route path="/" element={<HomePage />} />
           <Route path="/productos" element={<ProductsPage />} />
