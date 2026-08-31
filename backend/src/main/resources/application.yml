@@ -38,6 +38,13 @@ app:
   media-storage-path: ${MEDIA_PATH:./uploads}
   # URL publica bajo la que se sirven esas imagenes
   media-public-path: /media
+  # Datos de contacto de la imprenta (menu Contacto y armado del mensaje de WhatsApp).
+  # Completar con los datos reales antes de publicar.
+  contact:
+    whatsapp-number: ${WHATSAPP_NUMBER:}
+    instagram-url: ${INSTAGRAM_URL:}
+    email: ${CONTACT_EMAIL:}
+
   jwt:
     # EN PRODUCCION: definir JWT_SECRET (minimo 32 caracteres) como variable de entorno
     secret: ${JWT_SECRET:cambiar-este-secreto-de-desarrollo-mdimpresiones-2026}
