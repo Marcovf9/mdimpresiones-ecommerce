@@ -70,7 +70,7 @@ export function WhatsAppFab() {
           type="button"
           onClick={callar}
           aria-label="Cerrar mensaje"
-          className="absolute -top-2 -right-2 grid size-6 place-items-center rounded-full bg-ink-900 text-xs text-white shadow transition hover:bg-ink-700"
+          className="absolute -top-3 -right-3 grid size-9 place-items-center rounded-full bg-ink-900 text-sm text-white shadow transition hover:bg-ink-700"
         >
           ✕
         </button>
