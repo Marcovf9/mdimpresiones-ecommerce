@@ -34,11 +34,14 @@ export function Layout() {
         }`}
       >
         <div className="mx-auto flex max-w-6xl items-center justify-between px-6 py-4">
-          <Link
-            to="/"
-            className="font-display text-lg font-semibold tracking-[0.2em] text-white uppercase"
-          >
-            MO Impresiones
+          <Link to="/" aria-label="MO Impresiones — ir al inicio">
+            <img
+              src="/imagenes/logo.png"
+              alt="MO Impresiones"
+              width={600}
+              height={313}
+              className="h-9 w-auto sm:h-10"
+            />
           </Link>
           <button
             type="button"
@@ -72,9 +75,13 @@ function SiteFooter() {
     <footer className="bg-ink-900 text-ink-300">
       <div className="mx-auto grid max-w-6xl gap-8 px-6 py-12 sm:grid-cols-2">
         <div>
-          <p className="font-display text-lg font-semibold tracking-[0.2em] text-white uppercase">
-            MO Impresiones
-          </p>
+          <img
+            src="/imagenes/logo.png"
+            alt="MO Impresiones"
+            width={600}
+            height={313}
+            className="h-10 w-auto"
+          />
           <p className="mt-3 max-w-sm text-sm">
             Empresa gráfica familiar de Córdoba, Argentina. Más de 30 años imprimiendo ideas.
           </p>

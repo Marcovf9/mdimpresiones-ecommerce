@@ -113,7 +113,9 @@ function Gallery({ product }: { product: ProductDetail }) {
       <img
         src={active.url}
         alt={active.altText ?? product.name}
-        className="aspect-[16/10] w-full rounded-2xl object-cover"
+        // contain y no cover: casi todas las fotos son verticales y un recorte
+        // apaisado se comía el producto. El fondo neutro sostiene el encuadre.
+        className="aspect-[4/3] w-full rounded-2xl bg-white object-contain"
       />
 
       {product.images.length > 1 && (
