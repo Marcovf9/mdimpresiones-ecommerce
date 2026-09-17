@@ -11,7 +11,10 @@ public class AppProperties {
     /** Origenes permitidos por CORS, separados por coma. */
     private String corsAllowedOrigins = "http://localhost:5173";
 
-    /** Carpeta del disco donde se guardan las imagenes subidas desde el panel admin. */
+    /** Donde se guardan las imagenes del panel: "local" o "cloudinary". */
+    private String mediaProvider = "local";
+
+    /** Carpeta del disco donde se guardan las imagenes, solo en modo local. */
     private String mediaStoragePath = "./uploads";
 
     /** Prefijo de URL bajo el que se publican esas imagenes. */
@@ -90,6 +93,14 @@ public class AppProperties {
 
     public void setCorsAllowedOrigins(String corsAllowedOrigins) {
         this.corsAllowedOrigins = corsAllowedOrigins;
+    }
+
+    public String getMediaProvider() {
+        return mediaProvider;
+    }
+
+    public void setMediaProvider(String mediaProvider) {
+        this.mediaProvider = mediaProvider;
     }
 
     public String getMediaStoragePath() {

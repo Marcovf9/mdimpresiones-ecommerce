@@ -8,9 +8,9 @@ import org.springframework.web.multipart.MultipartFile;
 @RequestMapping("/api/admin/media")
 public class MediaController {
 
-    private final MediaStorageService storage;
+    private final MediaStorage storage;
 
-    public MediaController(MediaStorageService storage) {
+    public MediaController(MediaStorage storage) {
         this.storage = storage;
     }
 
