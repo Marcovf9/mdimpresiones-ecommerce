@@ -36,7 +36,11 @@ export function ProductDetailPage() {
     <article className="pt-24 pb-20">
       <div className="mx-auto max-w-6xl px-6">
         <nav aria-label="Ruta de navegación" className="text-sm text-ink-500">
-          <Link to="/productos" className="transition hover:text-ink-900">
+          <Link
+            to="/productos"
+            // El padding negativo agranda el área táctil sin correr el texto.
+            className="-m-3 inline-block p-3 transition hover:text-ink-900"
+          >
             Productos
           </Link>
           <span className="mx-2">/</span>

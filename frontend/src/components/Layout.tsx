@@ -37,7 +37,7 @@ export function Layout() {
         }`}
       >
         <div className="mx-auto flex max-w-6xl items-center justify-between px-6 py-4">
-          <Link to="/" aria-label="MO Impresiones — ir al inicio">
+          <Link to="/" aria-label="MO Impresiones — ir al inicio" className="-my-1 inline-block py-1">
             <img
               src="/imagenes/logo.png"
               alt="MO Impresiones"
@@ -51,7 +51,7 @@ export function Layout() {
             onClick={() => setMenuOpen(true)}
             aria-label="Abrir menú"
             aria-expanded={menuOpen}
-            className="rounded-full p-2 text-white transition hover:bg-white/10"
+            className="grid size-11 place-items-center rounded-full text-white transition hover:bg-white/10"
           >
             <MenuIcon />
           </button>
@@ -104,7 +104,7 @@ function SiteFooter() {
                   target="_blank"
                   rel="noreferrer"
                   aria-label="WhatsApp"
-                  className="grid size-10 place-items-center rounded-full bg-white/10 transition hover:bg-brand-500 hover:text-white"
+                  className="grid size-11 place-items-center rounded-full bg-white/10 transition hover:bg-brand-500 hover:text-white"
                 >
                   <WhatsAppIcon className="size-5" />
                 </a>
@@ -117,7 +117,7 @@ function SiteFooter() {
                   target="_blank"
                   rel="noreferrer"
                   aria-label="Instagram"
-                  className="grid size-10 place-items-center rounded-full bg-white/10 transition hover:bg-brand-500 hover:text-white"
+                  className="grid size-11 place-items-center rounded-full bg-white/10 transition hover:bg-brand-500 hover:text-white"
                 >
                   <InstagramIcon className="size-5" />
                 </a>
@@ -128,7 +128,7 @@ function SiteFooter() {
                 <a
                   href={`mailto:${contact.email}`}
                   aria-label="Enviar un mail"
-                  className="grid size-10 place-items-center rounded-full bg-white/10 transition hover:bg-brand-500 hover:text-white"
+                  className="grid size-11 place-items-center rounded-full bg-white/10 transition hover:bg-brand-500 hover:text-white"
                 >
                   <MailIcon className="size-5" />
                 </a>
@@ -142,10 +142,10 @@ function SiteFooter() {
         <div className="mx-auto flex max-w-6xl flex-col items-center gap-3 px-6 text-xs sm:flex-row sm:justify-between">
           <p>© {new Date().getFullYear()} MO Impresiones. Todos los derechos reservados.</p>
           <nav aria-label="Enlaces legales" className="flex gap-4">
-            <NavLink to="/terminos" className="transition hover:text-white">
+            <NavLink to="/terminos" className="-my-3.5 py-3.5 transition hover:text-white">
               Términos y condiciones
             </NavLink>
-            <NavLink to="/privacidad" className="transition hover:text-white">
+            <NavLink to="/privacidad" className="-my-3.5 py-3.5 transition hover:text-white">
               Privacidad
             </NavLink>
           </nav>
