@@ -183,6 +183,24 @@ export const adminApi = {
     }),
   deleteQuote: (id: number) => request<void>(`/api/admin/quotes/${id}`, { method: 'DELETE' }),
 
+  /**
+   * Los adjuntos no son públicos: hay que pedirlos con el token y abrirlos
+   * desde memoria, porque un <a href> no puede mandar la cabecera de sesión.
+   */
+  async abrirAdjunto(downloadPath: string): Promise<string> {
+    const session = sessionStore.read()
+    if (!session) throw new SessionExpiredError()
+    const respuesta = await fetch(`${BASE_URL}${downloadPath}`, {
+      headers: { Authorization: `Bearer ${session.token}` },
+    })
+    if (respuesta.status === 401) {
+      sessionStore.clear()
+      throw new SessionExpiredError()
+    }
+    if (!respuesta.ok) throw new ApiError(respuesta.status, 'No pudimos abrir el archivo.')
+    return URL.createObjectURL(await respuesta.blob())
+  },
+
   /** Sube un archivo y devuelve la URL publica con la que guardarlo. */
   async uploadMedia(file: File): Promise<string> {
     const form = new FormData()

@@ -1,273 +1,332 @@
-import { useEffect, useState, type ChangeEvent, type FormEvent } from 'react'
-import { useSearchParams } from 'react-router-dom'
+import { useEffect, useRef, useState, type FormEvent } from 'react'
+import { Link, useSearchParams } from 'react-router-dom'
 import { ApiError, api } from '../api/client'
-import type { Category, QuoteFormValues } from '../api/types'
+import type { Category, QuoteAttachmentValues, QuoteCreated } from '../api/types'
 import { useApi } from '../hooks/useApi'
-import { useContactInfo } from '../hooks/useContactInfo'
+import { usePageMeta } from '../hooks/usePageMeta'
+import { imagenOptimizada } from '../api/imagenes'
+import { itemVacio, usePresupuesto, MAX_ITEMS } from '../hooks/usePresupuesto'
 import { PageHeader } from '../components/PageChrome'
 import { WhatsAppIcon } from '../components/Icons'
-import { usePageMeta } from '../hooks/usePageMeta'
 
-const EMPTY_FORM: QuoteFormValues = {
-  fullName: '',
-  phone: '',
-  email: '',
-  company: '',
-  productSlug: '',
-  productName: '',
-  quantity: '',
-  format: '',
-  material: '',
-  finishings: '',
-  message: '',
+interface Contacto {
+  fullName: string
+  phone: string
+  email: string
+  company: string
+  message: string
 }
 
-type Status =
+const CONTACTO_VACIO: Contacto = { fullName: '', phone: '', email: '', company: '', message: '' }
+
+type Estado =
   | { kind: 'idle' }
   | { kind: 'sending' }
-  | { kind: 'sent'; whatsappUrl: string | null }
+  | { kind: 'sent'; resultado: QuoteCreated }
 
-/**
- * Ficha grande de cotizacion. Al enviarla guardamos el pedido en la API y
- * abrimos WhatsApp con el mensaje ya redactado.
- */
 export function QuotePage() {
   const [searchParams] = useSearchParams()
+  const { items, agregar, actualizar, quitar, vaciar } = usePresupuesto()
   const { data: categories } = useApi<Category[]>(() => api.categories(), [])
-  const contact = useContactInfo()
 
-  const [values, setValues] = useState<QuoteFormValues>(EMPTY_FORM)
-  const [status, setStatus] = useState<Status>({ kind: 'idle' })
+  const [contacto, setContacto] = useState<Contacto>(CONTACTO_VACIO)
+  const [adjuntos, setAdjuntos] = useState<QuoteAttachmentValues[]>([])
+  const [estado, setEstado] = useState<Estado>({ kind: 'idle' })
   const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({})
-  const [generalError, setGeneralError] = useState<string | null>(null)
+  const [errorGeneral, setErrorGeneral] = useState<string | null>(null)
 
   usePageMeta({
     title: 'Cotizá tu proyecto',
     description:
-      'Contanos qué necesitás imprimir y te respondemos con un presupuesto a medida. Sin compromiso.',
+      'Contanos qué necesitás imprimir y te respondemos con un presupuesto a medida. Podés pedir por varios productos a la vez.',
     path: '/cotiza',
   })
 
-  // Si llegamos desde la ficha de un producto, viene preseleccionado.
+  // Al llegar desde una ficha con ?producto=slug, ese producto entra solo.
+  const productoDeLaUrl = searchParams.get('producto')
+  const yaAgregadoDeLaUrl = useRef(false)
   useEffect(() => {
-    const slug = searchParams.get('producto')
-    if (slug) {
-      setValues((current) => ({ ...current, productSlug: slug }))
+    if (!productoDeLaUrl || !categories || yaAgregadoDeLaUrl.current) return
+    yaAgregadoDeLaUrl.current = true
+    const producto = categories.flatMap((c) => c.products).find((p) => p.slug === productoDeLaUrl)
+    if (producto) {
+      agregar(
+        itemVacio({
+          productSlug: producto.slug,
+          productName: producto.name,
+          coverImageUrl: producto.coverImageUrl,
+        }),
+      )
     }
-  }, [searchParams])
-
-  const update = (field: keyof QuoteFormValues) => (
-    event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>,
-  ) => {
-    setValues((current) => ({ ...current, [field]: event.target.value }))
-  }
+  }, [productoDeLaUrl, categories, agregar])
 
   async function handleSubmit(event: FormEvent) {
     event.preventDefault()
-    setStatus({ kind: 'sending' })
+    setEstado({ kind: 'sending' })
     setFieldErrors({})
-    setGeneralError(null)
+    setErrorGeneral(null)
 
     try {
-      const created = await api.createQuote(values)
-      setStatus({ kind: 'sent', whatsappUrl: created.whatsappUrl })
-      if (created.whatsappUrl) {
-        window.open(created.whatsappUrl, '_blank', 'noopener,noreferrer')
-      }
+      const resultado = await api.createQuote({
+        ...contacto,
+        items: items.map((item) => ({
+          productSlug: item.productSlug,
+          productName: item.productName,
+          quantity: item.quantity,
+          format: item.format,
+          material: item.material,
+          finishings: item.finishings,
+          notes: item.notes,
+        })),
+        attachments: adjuntos,
+      })
+      setEstado({ kind: 'sent', resultado })
+      // Recién con el pedido guardado se limpia la lista: si falla, no se pierde.
+      vaciar()
     } catch (error) {
-      setStatus({ kind: 'idle' })
+      setEstado({ kind: 'idle' })
       if (error instanceof ApiError) {
         setFieldErrors(error.fieldErrors)
-        // Si el error es de campos puntuales, esos mensajes ya se muestran al lado del input.
-        if (Object.keys(error.fieldErrors).length === 0) {
-          setGeneralError(error.message)
-        }
+        if (Object.keys(error.fieldErrors).length === 0) setErrorGeneral(error.message)
       } else {
-        setGeneralError('No pudimos enviar tu pedido. Intentá de nuevo.')
+        setErrorGeneral('No pudimos enviar tu pedido. Probá de nuevo.')
       }
     }
   }
 
-  if (status.kind === 'sent') {
-    return <SentPanel whatsappUrl={status.whatsappUrl} contactEmail={contact?.email ?? null} />
+  if (estado.kind === 'sent') {
+    return <PanelEnviado resultado={estado.resultado} />
   }
+
+  const sinProductos = items.length === 0
 
   return (
     <div className="pt-24 pb-20">
       <PageHeader
         eyebrow="Presupuestos"
         title="Cotizá tu proyecto"
-        description="Completá los datos y te respondemos con un presupuesto a medida. Al enviar se abre WhatsApp con tu consulta ya escrita."
+        description="Agregá todo lo que necesites y te respondemos con un presupuesto a medida. Al enviar se abre WhatsApp con tu consulta ya escrita."
       />
 
-      <form onSubmit={handleSubmit} noValidate className="mx-auto mt-12 max-w-3xl px-6">
-        <fieldset className="rounded-2xl border border-ink-100 bg-white p-6 sm:p-8">
-          <legend className="px-2 font-display text-lg font-semibold text-ink-900">
-            Tus datos
-          </legend>
-
-          <div className="mt-4 grid gap-5 sm:grid-cols-2">
-            <Field
-              label="Nombre y apellido"
-              name="fullName"
-              value={values.fullName}
-              onChange={update('fullName')}
-              error={fieldErrors.fullName}
-              required
-            />
-            <Field
-              label="Teléfono"
-              name="phone"
-              type="tel"
-              value={values.phone}
-              onChange={update('phone')}
-              error={fieldErrors.phone}
-              required
-            />
-            <Field
-              label="Email"
-              name="email"
-              type="email"
-              value={values.email}
-              onChange={update('email')}
-              error={fieldErrors.email}
-            />
-            <Field
-              label="Empresa"
-              name="company"
-              value={values.company}
-              onChange={update('company')}
-              error={fieldErrors.company}
-            />
-          </div>
-        </fieldset>
-
-        <fieldset className="mt-6 rounded-2xl border border-ink-100 bg-white p-6 sm:p-8">
-          <legend className="px-2 font-display text-lg font-semibold text-ink-900">
-            Tu proyecto
-          </legend>
-
-          <div className="mt-4 grid gap-5">
-            <label className="block">
-              <span className="mb-1.5 block text-sm font-medium text-ink-900">Producto</span>
-              <select
-                name="productSlug"
-                value={values.productSlug}
-                onChange={update('productSlug')}
-                className="w-full rounded-lg border border-ink-300 bg-white px-4 py-2.5 text-ink-900 focus:border-ink-900 focus:outline-none"
+      <form onSubmit={handleSubmit} className="mx-auto mt-10 max-w-3xl space-y-6 px-6">
+        <section className="rounded-2xl border border-ink-100 bg-white p-6">
+          <div className="flex flex-wrap items-center justify-between gap-3">
+            <h2 className="font-display text-xl font-semibold text-ink-900">
+              Tu pedido
+              {items.length > 0 && (
+                <span className="ml-2 text-sm font-normal text-ink-500">
+                  {items.length} {items.length === 1 ? 'producto' : 'productos'}
+                </span>
+              )}
+            </h2>
+            {items.length < MAX_ITEMS && (
+              <button
+                type="button"
+                onClick={() => agregar(itemVacio())}
+                className="rounded-lg border border-ink-300 px-3 py-2 text-sm font-medium text-ink-900 transition hover:border-ink-900"
               >
-                <option value="">No está en la lista / otro</option>
-                {categories?.map((category) => (
-                  <optgroup key={category.slug} label={category.name}>
-                    {category.products.map((product) => (
-                      <option key={product.slug} value={product.slug}>
-                        {product.name}
-                      </option>
-                    ))}
-                  </optgroup>
-                ))}
-              </select>
-            </label>
-
-            {values.productSlug === '' && (
-              <Field
-                label="¿Qué necesitás imprimir?"
-                name="productName"
-                value={values.productName}
-                onChange={update('productName')}
-                error={fieldErrors.productName}
-              />
+                Agregar otro producto
+              </button>
             )}
-
-            <div className="grid gap-5 sm:grid-cols-2">
-              <Field
-                label="Cantidad"
-                name="quantity"
-                value={values.quantity}
-                onChange={update('quantity')}
-                error={fieldErrors.quantity}
-                placeholder="Ej: 500 unidades"
-              />
-              <Field
-                label="Formato"
-                name="format"
-                value={values.format}
-                onChange={update('format')}
-                error={fieldErrors.format}
-                placeholder="Ej: A4"
-              />
-              <Field
-                label="Material"
-                name="material"
-                value={values.material}
-                onChange={update('material')}
-                error={fieldErrors.material}
-                placeholder="Ej: Cartulina ilustración"
-              />
-              <Field
-                label="Terminaciones"
-                name="finishings"
-                value={values.finishings}
-                onChange={update('finishings')}
-                error={fieldErrors.finishings}
-                placeholder="Ej: OPP mate, UV sectorizado"
-              />
-            </div>
-
-            <label className="block">
-              <span className="mb-1.5 block text-sm font-medium text-ink-900">
-                Contanos más sobre el proyecto
-              </span>
-              <textarea
-                name="message"
-                value={values.message}
-                onChange={update('message')}
-                rows={5}
-                className="w-full rounded-lg border border-ink-300 px-4 py-2.5 text-ink-900 focus:border-ink-900 focus:outline-none"
-                placeholder="Plazos, cantidad de páginas, referencias, lo que sea que nos ayude a presupuestar."
-              />
-              {fieldErrors.message && <FieldError message={fieldErrors.message} />}
-            </label>
           </div>
-        </fieldset>
 
-        {generalError && (
-          <p role="alert" className="mt-6 rounded-lg bg-brand-500/10 px-4 py-3 text-brand-600">
-            {generalError}
+          {fieldErrors.items && (
+            <p role="alert" className="mt-3 text-sm text-brand-600">
+              {fieldErrors.items}
+            </p>
+          )}
+
+          {sinProductos ? (
+            <div className="mt-4 rounded-xl border border-dashed border-ink-300 px-6 py-8 text-center">
+              <p className="text-ink-500">Todavía no agregaste nada.</p>
+              <Link
+                to="/productos"
+                className="mt-3 inline-block text-sm font-medium text-brand-500 underline transition hover:text-brand-600"
+              >
+                Ver el catálogo
+              </Link>
+              <p className="mt-4 text-sm text-ink-500">
+                O agregá un producto en blanco y describilo con tus palabras.
+              </p>
+            </div>
+          ) : (
+            <ul className="mt-4 space-y-4">
+              {items.map((item, indice) => (
+                <li key={indice} className="rounded-xl border border-ink-100 p-4">
+                  <div className="flex items-start gap-3">
+                    {item.coverImageUrl && (
+                      <img
+                        {...imagenOptimizada(item.coverImageUrl, 120)}
+                        alt=""
+                        className="size-16 shrink-0 rounded-lg bg-ink-50 object-contain"
+                      />
+                    )}
+                    <div className="min-w-0 flex-1">
+                      {item.productSlug ? (
+                        <p className="font-medium text-ink-900">{item.productName}</p>
+                      ) : (
+                        <input
+                          type="text"
+                          value={item.productName}
+                          onChange={(e) => actualizar(indice, { productName: e.target.value })}
+                          placeholder="¿Qué necesitás imprimir?"
+                          aria-label={`Producto ${indice + 1}`}
+                          className="w-full rounded-lg border border-ink-300 px-3 py-2 font-medium focus:border-ink-900 focus:outline-none"
+                        />
+                      )}
+                    </div>
+                    <button
+                      type="button"
+                      onClick={() => quitar(indice)}
+                      aria-label={`Quitar ${item.productName || 'producto ' + (indice + 1)}`}
+                      className="-m-2 grid size-11 place-items-center rounded-lg text-ink-500 transition hover:bg-ink-100 hover:text-brand-600"
+                    >
+                      ✕
+                    </button>
+                  </div>
+
+                  <div className="mt-3 grid gap-3 sm:grid-cols-2">
+                    <CampoItem
+                      label="Cantidad"
+                      value={item.quantity}
+                      placeholder="Ej: 500 unidades"
+                      onChange={(v) => actualizar(indice, { quantity: v })}
+                    />
+                    <CampoItem
+                      label="Formato"
+                      value={item.format}
+                      placeholder="Ej: A4"
+                      onChange={(v) => actualizar(indice, { format: v })}
+                    />
+                    <CampoItem
+                      label="Material"
+                      value={item.material}
+                      placeholder="Ej: Cartulina ilustración"
+                      onChange={(v) => actualizar(indice, { material: v })}
+                    />
+                    <CampoItem
+                      label="Terminaciones"
+                      value={item.finishings}
+                      placeholder="Ej: OPP mate, UV sectorizado"
+                      onChange={(v) => actualizar(indice, { finishings: v })}
+                    />
+                  </div>
+                </li>
+              ))}
+            </ul>
+          )}
+        </section>
+
+        <Adjuntos adjuntos={adjuntos} onCambio={setAdjuntos} />
+
+        <section className="rounded-2xl border border-ink-100 bg-white p-6">
+          <h2 className="font-display text-xl font-semibold text-ink-900">Tus datos</h2>
+          <div className="mt-4 grid gap-4 sm:grid-cols-2">
+            <Campo
+              label="Nombre y apellido"
+              required
+              value={contacto.fullName}
+              error={fieldErrors.fullName}
+              onChange={(v) => setContacto({ ...contacto, fullName: v })}
+            />
+            <Campo
+              label="Teléfono"
+              required
+              type="tel"
+              value={contacto.phone}
+              error={fieldErrors.phone}
+              onChange={(v) => setContacto({ ...contacto, phone: v })}
+            />
+            <Campo
+              label="Email"
+              type="email"
+              value={contacto.email}
+              error={fieldErrors.email}
+              onChange={(v) => setContacto({ ...contacto, email: v })}
+            />
+            <Campo
+              label="Empresa"
+              value={contacto.company}
+              error={fieldErrors.company}
+              onChange={(v) => setContacto({ ...contacto, company: v })}
+            />
+          </div>
+          <label className="mt-4 block">
+            <span className="mb-1.5 block text-sm font-medium text-ink-900">
+              Comentarios <span className="font-normal text-ink-500">(opcional)</span>
+            </span>
+            <textarea
+              value={contacto.message}
+              onChange={(e) => setContacto({ ...contacto, message: e.target.value })}
+              rows={3}
+              placeholder="Fechas, referencias, lo que nos sirva saber."
+              className="w-full rounded-lg border border-ink-300 px-3 py-2 focus:border-ink-900 focus:outline-none"
+            />
+          </label>
+        </section>
+
+        {errorGeneral && (
+          <p role="alert" className="rounded-lg bg-brand-500/10 px-4 py-3 text-sm text-brand-600">
+            {errorGeneral}
           </p>
         )}
 
         <button
           type="submit"
-          disabled={status.kind === 'sending'}
-          className="mt-8 inline-flex w-full items-center justify-center gap-2 rounded-full bg-brand-500 px-8 py-4 font-medium text-white transition hover:bg-brand-600 disabled:cursor-not-allowed disabled:opacity-60 sm:w-auto"
+          disabled={estado.kind === 'sending' || sinProductos}
+          className="inline-flex w-full items-center justify-center gap-2 rounded-full bg-ink-900 px-8 py-4 font-medium text-white transition hover:bg-ink-700 disabled:cursor-not-allowed disabled:opacity-50"
         >
-          <WhatsAppIcon className="size-5" />
-          {status.kind === 'sending' ? 'Enviando...' : 'Enviar por WhatsApp'}
+          {estado.kind === 'sending' ? 'Enviando...' : 'Pedir presupuesto'}
         </button>
+        {sinProductos && (
+          <p className="text-center text-sm text-ink-500">
+            Agregá al menos un producto para poder enviar.
+          </p>
+        )}
       </form>
     </div>
   )
 }
 
-function Field({
+function CampoItem({
   label,
-  name,
+  value,
+  placeholder,
+  onChange,
+}: {
+  label: string
+  value: string
+  placeholder: string
+  onChange: (valor: string) => void
+}) {
+  return (
+    <label className="block">
+      <span className="mb-1 block text-xs text-ink-500">{label}</span>
+      <input
+        type="text"
+        value={value}
+        onChange={(e) => onChange(e.target.value)}
+        placeholder={placeholder}
+        className="w-full rounded-lg border border-ink-300 px-3 py-2 text-sm focus:border-ink-900 focus:outline-none"
+      />
+    </label>
+  )
+}
+
+function Campo({
+  label,
   value,
   onChange,
   error,
-  type = 'text',
   required = false,
-  placeholder,
+  type = 'text',
 }: {
   label: string
-  name: string
   value: string
-  onChange: (event: ChangeEvent<HTMLInputElement>) => void
+  onChange: (valor: string) => void
   error?: string
-  type?: string
   required?: boolean
-  placeholder?: string
+  type?: string
 }) {
   return (
     <label className="block">
@@ -277,64 +336,151 @@ function Field({
       </span>
       <input
         type={type}
-        name={name}
         value={value}
-        onChange={onChange}
-        placeholder={placeholder}
+        onChange={(e) => onChange(e.target.value)}
         aria-invalid={Boolean(error)}
-        className={`w-full rounded-lg border px-4 py-2.5 text-ink-900 focus:outline-none ${
+        className={`w-full rounded-lg border px-3 py-2 focus:outline-none ${
           error ? 'border-brand-500' : 'border-ink-300 focus:border-ink-900'
         }`}
       />
-      {error && <FieldError message={error} />}
+      {error && (
+        <span role="alert" className="mt-1 block text-sm text-brand-600">
+          {error}
+        </span>
+      )}
     </label>
   )
 }
 
-function FieldError({ message }: { message: string }) {
+const MAX_ADJUNTOS = 5
+
+function Adjuntos({
+  adjuntos,
+  onCambio,
+}: {
+  adjuntos: QuoteAttachmentValues[]
+  onCambio: (adjuntos: QuoteAttachmentValues[]) => void
+}) {
+  const inputRef = useRef<HTMLInputElement>(null)
+  const [subiendo, setSubiendo] = useState(false)
+  const [error, setError] = useState<string | null>(null)
+
+  async function alElegir(files: FileList | null) {
+    if (!files || files.length === 0) return
+    setSubiendo(true)
+    setError(null)
+    try {
+      const nuevos: QuoteAttachmentValues[] = []
+      for (const file of Array.from(files).slice(0, MAX_ADJUNTOS - adjuntos.length)) {
+        nuevos.push(await api.subirAdjunto(file))
+      }
+      onCambio([...adjuntos, ...nuevos])
+    } catch (err) {
+      setError(err instanceof ApiError ? err.message : 'No pudimos subir el archivo.')
+    } finally {
+      setSubiendo(false)
+      if (inputRef.current) inputRef.current.value = ''
+    }
+  }
+
   return (
-    <span role="alert" className="mt-1 block text-sm text-brand-600">
-      {message}
-    </span>
+    <section className="rounded-2xl border border-ink-100 bg-white p-6">
+      <h2 className="font-display text-xl font-semibold text-ink-900">
+        Archivos <span className="text-sm font-normal text-ink-500">(opcional)</span>
+      </h2>
+      <p className="mt-1 text-sm text-ink-500">
+        Si ya tenés el diseño o un boceto, sumalo y ganamos una vuelta de mensajes.
+      </p>
+
+      {adjuntos.length > 0 && (
+        <ul className="mt-4 space-y-2">
+          {adjuntos.map((adjunto, i) => (
+            <li
+              key={adjunto.storageKey}
+              className="flex items-center gap-3 rounded-lg bg-ink-50 px-3 py-2 text-sm"
+            >
+              <span className="min-w-0 flex-1 truncate text-ink-900">{adjunto.filename}</span>
+              {adjunto.sizeBytes != null && (
+                <span className="shrink-0 text-xs text-ink-500">
+                  {Math.max(1, Math.round(adjunto.sizeBytes / 1024))} KB
+                </span>
+              )}
+              <button
+                type="button"
+                onClick={() => onCambio(adjuntos.filter((_, j) => j !== i))}
+                aria-label={`Quitar ${adjunto.filename}`}
+                className="-m-2 grid size-11 place-items-center rounded-lg text-ink-500 transition hover:text-brand-600"
+              >
+                ✕
+              </button>
+            </li>
+          ))}
+        </ul>
+      )}
+
+      {error && (
+        <p role="alert" className="mt-3 text-sm text-brand-600">
+          {error}
+        </p>
+      )}
+
+      {adjuntos.length < MAX_ADJUNTOS && (
+        <div className="mt-4">
+          <input
+            ref={inputRef}
+            type="file"
+            accept="application/pdf,image/jpeg,image/png,image/webp"
+            multiple
+            onChange={(e) => alElegir(e.target.files)}
+            className="hidden"
+            id="adjuntos-cotizacion"
+          />
+          <button
+            type="button"
+            disabled={subiendo}
+            onClick={() => inputRef.current?.click()}
+            className="rounded-lg border border-ink-300 px-4 py-2 text-sm font-medium text-ink-900 transition hover:border-ink-900 disabled:opacity-50"
+          >
+            {subiendo ? 'Subiendo...' : 'Adjuntar archivo'}
+          </button>
+          <span className="ml-3 text-xs text-ink-500">
+            PDF, JPG o PNG. Hasta {MAX_ADJUNTOS} archivos.
+          </span>
+        </div>
+      )}
+    </section>
   )
 }
 
-/** Pantalla de confirmacion. Contempla que el navegador bloquee la pestana nueva. */
-function SentPanel({
-  whatsappUrl,
-  contactEmail,
-}: {
-  whatsappUrl: string | null
-  contactEmail: string | null
-}) {
+function PanelEnviado({ resultado }: { resultado: QuoteCreated }) {
   return (
-    <div className="grid min-h-[70dvh] place-items-center px-6 pt-24 pb-20">
-      <div className="max-w-lg text-center">
-        <h1 className="font-display text-3xl font-semibold text-ink-900 sm:text-4xl">
-          ¡Recibimos tu pedido!
-        </h1>
+    <div className="grid min-h-[70dvh] place-items-center px-6 pt-24 text-center">
+      <div className="max-w-md">
+        <h1 className="font-display text-3xl font-semibold text-ink-900">¡Recibimos tu pedido!</h1>
+        <p className="mt-3 text-ink-500">
+          Ya lo tenemos registrado. Para que llegue más rápido, mandanos también el mensaje por
+          WhatsApp: se abre con todo lo que cargaste ya escrito.
+        </p>
 
-        {whatsappUrl ? (
-          <>
-            <p className="mt-4 text-lg text-ink-500">
-              Se abrió WhatsApp con tu consulta lista para enviar. Si no se abrió, usá este botón.
-            </p>
-            <a
-              href={whatsappUrl}
-              target="_blank"
-              rel="noreferrer"
-              className="mt-8 inline-flex items-center gap-2 rounded-full bg-brand-500 px-8 py-4 font-medium text-white transition hover:bg-brand-600"
-            >
-              <WhatsAppIcon className="size-5" />
-              Abrir WhatsApp
-            </a>
-          </>
+        {resultado.whatsappUrl ? (
+          <a
+            href={resultado.whatsappUrl}
+            target="_blank"
+            rel="noreferrer"
+            className="mt-8 inline-flex items-center gap-2 rounded-full bg-[#25D366] px-7 py-3 font-medium text-white transition hover:brightness-95"
+          >
+            <WhatsAppIcon className="size-5" />
+            Enviar por WhatsApp
+          </a>
         ) : (
-          <p className="mt-4 text-lg text-ink-500">
-            Guardamos tu consulta y te vamos a responder a la brevedad
-            {contactEmail && <> . También podés escribirnos a {contactEmail}</>}.
-          </p>
+          <p className="mt-8 text-ink-500">Te vamos a estar contactando a la brevedad.</p>
         )}
+
+        <div className="mt-6">
+          <Link to="/productos" className="text-sm text-ink-500 underline hover:text-ink-900">
+            Seguir viendo productos
+          </Link>
+        </div>
       </div>
     </div>
   )

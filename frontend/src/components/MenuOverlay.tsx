@@ -1,5 +1,6 @@
 import { useEffect, useState, type ReactNode } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
+import { usePresupuesto } from '../hooks/usePresupuesto'
 import { api } from '../api/client'
 import type { ContactInfo, ProductSummary } from '../api/types'
 import {
@@ -23,6 +24,7 @@ interface MenuOverlayProps {
  */
 export function MenuOverlay({ open, onClose, contact }: MenuOverlayProps) {
   const [contactOpen, setContactOpen] = useState(false)
+  const { items } = usePresupuesto()
 
   useEffect(() => {
     if (!open) {
@@ -90,7 +92,21 @@ export function MenuOverlay({ open, onClose, contact }: MenuOverlayProps) {
             {contactOpen && <ContactChannels contact={contact} />}
           </li>
 
-          <MenuLink to="/cotiza" onClick={onClose}>Cotizá tu producto</MenuLink>
+          <li>
+            <Link
+              to="/cotiza"
+              onClick={onClose}
+              className="flex items-center justify-between gap-3 border-b border-white/10 py-4 text-lg text-white transition hover:text-brand-500"
+            >
+              Cotizá tu producto
+              {/* El contador avisa que hay un pedido a medio armar. */}
+              {items.length > 0 && (
+                <span className="grid min-w-7 place-items-center rounded-full bg-brand-500 px-2 py-0.5 text-sm font-medium text-white">
+                  {items.length}
+                </span>
+              )}
+            </Link>
+          </li>
         </ul>
       </nav>
     </div>

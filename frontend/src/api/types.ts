@@ -62,18 +62,31 @@ export interface ContactInfo {
   email: string | null
 }
 
+export interface QuoteItemValues {
+  productSlug?: string
+  productName?: string
+  quantity?: string
+  format?: string
+  material?: string
+  finishings?: string
+  notes?: string
+}
+
+export interface QuoteAttachmentValues {
+  storageKey: string
+  filename: string
+  contentType?: string
+  sizeBytes?: number
+}
+
 export interface QuoteFormValues {
   fullName: string
   phone: string
-  email: string
-  company: string
-  productSlug: string
-  productName: string
-  quantity: string
-  format: string
-  material: string
-  finishings: string
-  message: string
+  email?: string
+  company?: string
+  message?: string
+  items: QuoteItemValues[]
+  attachments?: QuoteAttachmentValues[]
 }
 
 export interface QuoteCreated {

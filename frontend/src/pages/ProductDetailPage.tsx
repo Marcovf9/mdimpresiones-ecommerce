@@ -10,6 +10,7 @@ import { SkeletonFichaProducto } from '../components/Skeletons'
 import { imagenOptimizada } from '../api/imagenes'
 import { Lightbox } from '../components/Lightbox'
 import { ProductosRelacionados } from '../components/ProductosRelacionados'
+import { BotonAgregarPresupuesto } from '../components/BotonAgregarPresupuesto'
 
 /** Ficha del producto: descripcion, fotos, ficha tecnica y boton de cotizacion. */
 export function ProductDetailPage() {
@@ -89,13 +90,17 @@ export function ProductDetailPage() {
           <p className="mx-auto mt-3 max-w-xl text-ink-100">
             Contanos cantidad, formato y terminaciones, y te pasamos un presupuesto a medida.
           </p>
-          <Link
-            to={`/cotiza?producto=${encodeURIComponent(product.slug)}`}
-            className="mt-8 inline-flex items-center gap-2 rounded-full bg-brand-500 px-8 py-4 font-medium text-white transition hover:bg-brand-600"
-          >
-            Cotizá tu proyecto
-            <ArrowRightIcon />
-          </Link>
+          <div className="mt-8 flex flex-col items-center gap-4">
+            <Link
+              to={`/cotiza?producto=${encodeURIComponent(product.slug)}`}
+              className="inline-flex items-center gap-2 rounded-full bg-brand-500 px-8 py-4 font-medium text-white transition hover:bg-brand-600"
+            >
+              Cotizá este producto
+              <ArrowRightIcon />
+            </Link>
+            {/* Para quien necesita varias piezas: suma y sigue mirando. */}
+            <BotonAgregarPresupuesto product={product} />
+          </div>
         </div>
 
         <ProductosRelacionados
