@@ -6,6 +6,7 @@ import { useApi } from '../hooks/useApi'
 import { ArrowRightIcon } from '../components/Icons'
 import { ErrorState, LoadingState } from '../components/PageChrome'
 import { usePageMeta } from '../hooks/usePageMeta'
+import { imagenOptimizada } from '../api/imagenes'
 
 /** Ficha del producto: descripcion, fotos, ficha tecnica y boton de cotizacion. */
 export function ProductDetailPage() {
@@ -111,7 +112,7 @@ function Gallery({ product }: { product: ProductDetail }) {
   return (
     <div className="mt-10">
       <img
-        src={active.url}
+        {...imagenOptimizada(active.url, 1100)}
         alt={active.altText ?? product.name}
         // contain y no cover: casi todas las fotos son verticales y un recorte
         // apaisado se comía el producto. El fondo neutro sostiene el encuadre.
@@ -132,7 +133,7 @@ function Gallery({ product }: { product: ProductDetail }) {
                 }`}
               >
                 <img
-                  src={image.url}
+                  {...imagenOptimizada(image.url, 80)}
                   alt=""
                   className="size-20 object-cover"
                 />
