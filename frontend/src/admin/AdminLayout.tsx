@@ -18,7 +18,7 @@ export function AdminLayout() {
         <div className="mx-auto flex max-w-7xl flex-wrap items-center justify-between gap-4 px-6 py-4">
           <div className="flex items-center gap-6">
             <span className="font-display text-sm font-semibold tracking-[0.2em] text-ink-900 uppercase">
-              MD Impresiones
+              MO Impresiones
             </span>
             <nav aria-label="Secciones del panel" className="flex flex-wrap gap-1">
               {NAV_ITEMS.map((item) => (

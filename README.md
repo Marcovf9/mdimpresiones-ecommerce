@@ -1,6 +1,6 @@
-# MD Impresiones — Sitio institucional y catálogo
+# MO Impresiones — Sitio institucional y catálogo
 
-Sitio web de MD Impresiones, empresa gráfica familiar de Córdoba, Argentina, con más de
+Sitio web de MO Impresiones, empresa gráfica familiar de Córdoba, Argentina, con más de
 30 años de trayectoria.
 
 ## Stack
@@ -43,9 +43,9 @@ docker-compose.yml   PostgreSQL para desarrollo local
 
 | Variable         | Default                                        | Descripción                          |
 |------------------|------------------------------------------------|--------------------------------------|
-| `DB_URL`         | `jdbc:postgresql://localhost:5432/mdimpresiones` | Conexión a PostgreSQL              |
-| `DB_USER`        | `mdimpresiones`                                | Usuario de base de datos             |
-| `DB_PASSWORD`    | `mdimpresiones`                                | Contraseña de base de datos          |
+| `DB_URL`         | `jdbc:postgresql://localhost:5432/moimpresiones` | Conexión a PostgreSQL              |
+| `DB_USER`        | `moimpresiones`                                | Usuario de base de datos             |
+| `DB_PASSWORD`    | `moimpresiones`                                | Contraseña de base de datos          |
 | `CORS_ORIGINS`   | `http://localhost:5173`                        | Orígenes permitidos, separados por coma |
 | `MEDIA_PATH`     | `./uploads`                                    | Carpeta de imágenes subidas          |
 | `JWT_SECRET`     | valor de desarrollo                            | **Obligatorio en producción** (mín. 32 caracteres) |

@@ -38,7 +38,7 @@ export function Layout() {
             to="/"
             className="font-display text-lg font-semibold tracking-[0.2em] text-white uppercase"
           >
-            MD Impresiones
+            MO Impresiones
           </Link>
           <button
             type="button"
@@ -73,7 +73,7 @@ function SiteFooter() {
       <div className="mx-auto grid max-w-6xl gap-8 px-6 py-12 sm:grid-cols-2">
         <div>
           <p className="font-display text-lg font-semibold tracking-[0.2em] text-white uppercase">
-            MD Impresiones
+            MO Impresiones
           </p>
           <p className="mt-3 max-w-sm text-sm">
             Empresa gráfica familiar de Córdoba, Argentina. Más de 30 años imprimiendo ideas.
@@ -130,7 +130,7 @@ function SiteFooter() {
 
       <div className="border-t border-white/10 py-6">
         <div className="mx-auto flex max-w-6xl flex-col items-center gap-3 px-6 text-xs sm:flex-row sm:justify-between">
-          <p>© {new Date().getFullYear()} MD Impresiones. Todos los derechos reservados.</p>
+          <p>© {new Date().getFullYear()} MO Impresiones. Todos los derechos reservados.</p>
           <nav aria-label="Enlaces legales" className="flex gap-4">
             <NavLink to="/terminos" className="transition hover:text-white">
               Términos y condiciones

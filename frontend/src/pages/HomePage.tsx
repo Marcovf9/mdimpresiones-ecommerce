@@ -18,7 +18,7 @@ export function HomePage() {
   const location = useLocation()
 
   usePageMeta({
-    title: 'MD Impresiones',
+    title: 'MO Impresiones',
     description:
       'Imprenta en Córdoba, Argentina. Más de 30 años imprimiendo: institucional, comercial, editorial, packaging, impresos numerados y regalos empresariales.',
     path: '/',
@@ -98,7 +98,7 @@ function Hero() {
 
       <div className="relative px-6 text-center">
         <h1 className="font-display text-5xl font-semibold tracking-tight text-white sm:text-7xl lg:text-8xl">
-          MD Impresiones
+          MO Impresiones
         </h1>
         <p className="mx-auto mt-6 max-w-xl text-lg text-ink-100">
           Imprenta en Córdoba, Argentina. Más de 30 años de oficio gráfico,

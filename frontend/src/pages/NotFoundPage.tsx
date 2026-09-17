@@ -4,7 +4,7 @@ import { usePageMeta } from '../hooks/usePageMeta'
 export function NotFoundPage() {
   usePageMeta({
     title: 'Página no encontrada',
-    description: 'La dirección que buscás no existe en el sitio de MD Impresiones.',
+    description: 'La dirección que buscás no existe en el sitio de MO Impresiones.',
   })
 
   return (

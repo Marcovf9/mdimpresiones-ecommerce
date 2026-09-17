@@ -1,21 +1,21 @@
 services:
   db:
     image: postgres:16-alpine
-    container_name: mdimpresiones-db
+    container_name: moimpresiones-db
     restart: unless-stopped
     environment:
-      POSTGRES_DB: mdimpresiones
-      POSTGRES_USER: mdimpresiones
-      POSTGRES_PASSWORD: mdimpresiones
+      POSTGRES_DB: moimpresiones
+      POSTGRES_USER: moimpresiones
+      POSTGRES_PASSWORD: moimpresiones
     ports:
       - "5432:5432"
     volumes:
-      - mdimpresiones-pgdata:/var/lib/postgresql/data
+      - moimpresiones-pgdata:/var/lib/postgresql/data
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U mdimpresiones -d mdimpresiones"]
+      test: ["CMD-SHELL", "pg_isready -U moimpresiones -d moimpresiones"]
       interval: 5s
       timeout: 5s
       retries: 10
 
 volumes:
-  mdimpresiones-pgdata:
+  moimpresiones-pgdata:

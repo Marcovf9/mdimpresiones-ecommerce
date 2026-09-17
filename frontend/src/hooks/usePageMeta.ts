@@ -10,7 +10,7 @@ interface PageMeta {
   image?: string
 }
 
-const SUFIJO = 'MD Impresiones';
+const SUFIJO = 'MO Impresiones';
 
 /**
  * Ajusta título, descripción y etiquetas Open Graph de cada pantalla.

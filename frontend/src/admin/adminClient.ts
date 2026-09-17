@@ -12,7 +12,7 @@ import type {
 } from './adminTypes'
 
 const BASE_URL = import.meta.env.VITE_API_URL ?? ''
-const STORAGE_KEY = 'mdimpresiones.admin.session'
+const STORAGE_KEY = 'moimpresiones.admin.session'
 
 /** Se dispara cuando el token vencio o el backend lo rechazo. */
 export class SessionExpiredError extends Error {
