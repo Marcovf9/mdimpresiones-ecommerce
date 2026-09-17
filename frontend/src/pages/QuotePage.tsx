@@ -93,7 +93,7 @@ export function QuotePage() {
   }
 
   return (
-    <div className="bg-ink-50 pt-24 pb-20">
+    <div className="pt-24 pb-20">
       <PageHeader
         eyebrow="Presupuestos"
         title="Cotizá tu proyecto"

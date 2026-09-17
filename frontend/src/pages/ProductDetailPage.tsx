@@ -33,7 +33,7 @@ export function ProductDetailPage() {
   if (!product) return <ErrorState message="No encontramos ese producto." />
 
   return (
-    <article className="bg-ink-50 pt-24 pb-20">
+    <article className="pt-24 pb-20">
       <div className="mx-auto max-w-6xl px-6">
         <nav aria-label="Ruta de navegación" className="text-sm text-ink-500">
           <Link to="/productos" className="transition hover:text-ink-900">

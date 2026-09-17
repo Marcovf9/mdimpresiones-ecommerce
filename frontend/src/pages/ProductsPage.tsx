@@ -33,7 +33,7 @@ export function ProductsPage() {
   const active = categories.find((category) => category.slug === activeSlug) ?? categories[0]
 
   return (
-    <div className="bg-ink-50 pt-24 pb-20">
+    <div className="pt-24 pb-20">
       <PageHeader
         eyebrow="Catálogo"
         title="Productos"
