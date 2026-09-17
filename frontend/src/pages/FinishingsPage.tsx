@@ -5,6 +5,7 @@ import { useApi } from '../hooks/useApi'
 import { Modal } from '../components/Modal'
 import { ErrorState, LoadingState, PageHeader } from '../components/PageChrome'
 import { usePageMeta } from '../hooks/usePageMeta'
+import { imagenOptimizada } from '../api/imagenes'
 
 /**
  * Grilla de terminaciones con el nombre debajo de cada imagen.
@@ -46,7 +47,7 @@ export function FinishingsPage() {
               <div className="overflow-hidden rounded-2xl bg-ink-100">
                 {finishing.imageUrl ? (
                   <img
-                    src={finishing.imageUrl}
+                    {...imagenOptimizada(finishing.imageUrl, 480)}
                     alt={finishing.name}
                     className="aspect-[4/3] w-full object-cover transition duration-500 group-hover:scale-105"
                   />
@@ -75,7 +76,7 @@ export function FinishingsPage() {
           <>
             {selected.imageUrl && (
               <img
-                src={selected.imageUrl}
+                {...imagenOptimizada(selected.imageUrl, 900)}
                 alt={selected.name}
                 className="mb-6 aspect-[16/9] w-full rounded-xl object-cover"
               />

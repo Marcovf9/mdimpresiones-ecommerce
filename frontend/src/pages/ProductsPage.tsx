@@ -6,6 +6,7 @@ import { useApi } from '../hooks/useApi'
 import { ArrowRightIcon, ChevronDownIcon } from '../components/Icons'
 import { PageHeader, ErrorState, LoadingState } from '../components/PageChrome'
 import { usePageMeta } from '../hooks/usePageMeta'
+import { imagenOptimizada } from '../api/imagenes'
 
 /**
  * Listado de rubros. En escritorio, pasar por encima de un rubro muestra sus
@@ -123,7 +124,7 @@ function ProductGrid({ products }: { products: ProductSummary[] }) {
           >
             {product.coverImageUrl && (
               <img
-                src={product.coverImageUrl}
+                {...imagenOptimizada(product.coverImageUrl, 560)}
                 alt=""
                 loading="lazy"
                 className="aspect-[4/3] w-full bg-ink-50 object-contain"
