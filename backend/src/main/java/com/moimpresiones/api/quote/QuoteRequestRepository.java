@@ -19,6 +19,8 @@ public interface QuoteRequestRepository extends JpaRepository<QuoteRequest, Long
 
     long countByCreatedAtAfter(Instant moment);
 
+    long countByCreatedAtBetween(Instant desde, Instant hasta);
+
     /**
      * Cantidad de pedidos por semana, para el grafico de demanda del panel.
      * Nativa porque date_trunc no existe en JPQL.

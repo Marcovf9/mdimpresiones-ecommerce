@@ -3,11 +3,14 @@ import { Link, NavLink, Outlet, useLocation } from 'react-router-dom'
 import { useContactInfo } from '../hooks/useContactInfo'
 import { InstagramIcon, MailIcon, MenuIcon, WhatsAppIcon } from './Icons'
 import { MenuOverlay } from './MenuOverlay'
+import { useTrackPageView } from '../hooks/useTrackPageView'
 import { WhatsAppFab } from './WhatsAppFab'
 import { StructuredData } from './StructuredData'
 import { domicilioCompleto, EMPRESA } from '../config/empresa'
 
 export function Layout() {
+  useTrackPageView()
+
   const [menuOpen, setMenuOpen] = useState(false)
   const contact = useContactInfo()
   const location = useLocation()

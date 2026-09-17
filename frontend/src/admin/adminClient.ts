@@ -9,6 +9,7 @@ import type {
   SaveCategoryPayload,
   SaveFinishingPayload,
   SaveProductPayload,
+  Reporte,
 } from './adminTypes'
 
 const BASE_URL = import.meta.env.VITE_API_URL ?? ''
@@ -115,6 +116,15 @@ export const adminApi = {
   },
 
   dashboard: () => request<Dashboard>('/api/admin/dashboard'),
+
+  reporte: (desde: string, hasta: string) =>
+    request<Reporte>(`/api/admin/analytics?desde=${desde}&hasta=${hasta}`),
+
+  cambiarPassword: (actual: string, nueva: string) =>
+    request<void>('/api/admin/password', {
+      method: 'POST',
+      body: JSON.stringify({ actual, nueva }),
+    }),
 
   // Rubros
   categories: () => request<Category[]>('/api/admin/catalog/categories'),
