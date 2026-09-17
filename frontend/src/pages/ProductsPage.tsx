@@ -4,8 +4,9 @@ import { api } from '../api/client'
 import type { Category, ProductSummary } from '../api/types'
 import { useApi } from '../hooks/useApi'
 import { ArrowRightIcon, ChevronDownIcon } from '../components/Icons'
-import { PageHeader, ErrorState, LoadingState } from '../components/PageChrome'
+import { PageHeader, ErrorState } from '../components/PageChrome'
 import { usePageMeta } from '../hooks/usePageMeta'
+import { SkeletonListadoProductos } from '../components/Skeletons'
 import { imagenOptimizada } from '../api/imagenes'
 
 /**
@@ -28,7 +29,7 @@ export function ProductsPage() {
     path: '/productos',
   })
 
-  if (loading) return <LoadingState label="Cargando productos" />
+  if (loading) return <SkeletonListadoProductos />
   if (error) return <ErrorState message={error} />
   if (!categories || categories.length === 0) {
     return <ErrorState message="Todavía no hay productos cargados." />

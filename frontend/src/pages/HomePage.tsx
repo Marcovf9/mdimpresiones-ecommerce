@@ -2,6 +2,7 @@ import { useEffect } from 'react'
 import { Link, useLocation } from 'react-router-dom'
 import { ArrowRightIcon } from '../components/Icons'
 import { usePageMeta } from '../hooks/usePageMeta'
+import { useRevelarAlScroll } from '../hooks/useRevelarAlScroll'
 
 /**
  * Texto institucional entregado por el cliente ("Quienes somos FINAL.docx").
@@ -16,6 +17,8 @@ const ABOUT_PARAGRAPHS = [
 
 export function HomePage() {
   const location = useLocation()
+
+  useRevelarAlScroll()
 
   usePageMeta({
     title: 'MO Impresiones',
@@ -35,7 +38,7 @@ export function HomePage() {
     <>
       <Hero />
 
-      <section id="quienes-somos" className="scroll-mt-20 py-20 sm:py-28">
+      <section id="quienes-somos" data-revelar className="scroll-mt-20 py-20 sm:py-28">
         <div className="mx-auto max-w-3xl px-6">
           <p className="font-display text-sm tracking-[0.3em] text-brand-500 uppercase">
             Nuestra historia

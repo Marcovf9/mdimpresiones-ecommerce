@@ -72,3 +72,29 @@ body::after {
     opacity: 0.2;
   }
 }
+
+/*
+ * Aparición progresiva al hacer scroll.
+ *
+ * El estado oculto cuelga de .js-revelar, una clase que el script agrega al
+ * <html> solo si va a poder revelarlos. Sin esa clase todo se ve normalmente:
+ * si el JavaScript falla o no llega a correr, el contenido nunca queda
+ * invisible por culpa de un efecto decorativo.
+ */
+.js-revelar [data-revelar] {
+  opacity: 0;
+  transform: translateY(1rem);
+  transition:
+    opacity 0.6s ease-out,
+    transform 0.6s ease-out;
+}
+
+.js-revelar [data-revelar][data-revelado='true'] {
+  opacity: 1;
+  transform: none;
+}
+
+/* Escalonado: cada elemento entra apenas después del anterior. */
+.js-revelar [data-revelar][data-retraso='1'] { transition-delay: 0.08s; }
+.js-revelar [data-revelar][data-retraso='2'] { transition-delay: 0.16s; }
+.js-revelar [data-revelar][data-retraso='3'] { transition-delay: 0.24s; }

@@ -3,8 +3,10 @@ import { api } from '../api/client'
 import type { Finishing } from '../api/types'
 import { useApi } from '../hooks/useApi'
 import { Modal } from '../components/Modal'
-import { ErrorState, LoadingState, PageHeader } from '../components/PageChrome'
+import { ErrorState, PageHeader } from '../components/PageChrome'
 import { usePageMeta } from '../hooks/usePageMeta'
+import { useRevelarAlScroll } from '../hooks/useRevelarAlScroll'
+import { SkeletonTerminaciones } from '../components/Skeletons'
 import { imagenOptimizada } from '../api/imagenes'
 
 /**
@@ -15,6 +17,9 @@ export function FinishingsPage() {
   const { data: finishings, loading, error } = useApi<Finishing[]>(() => api.finishings(), [])
   const [selected, setSelected] = useState<Finishing | null>(null)
 
+  // Se vuelve a observar cuando llegan los datos: antes no había qué revelar.
+  useRevelarAlScroll([finishings])
+
   usePageMeta({
     title: 'Terminaciones',
     description:
@@ -22,7 +27,7 @@ export function FinishingsPage() {
     path: '/terminaciones',
   })
 
-  if (loading) return <LoadingState label="Cargando terminaciones" />
+  if (loading) return <SkeletonTerminaciones />
   if (error) return <ErrorState message={error} />
   if (!finishings || finishings.length === 0) {
     return <ErrorState message="Todavía no hay terminaciones cargadas." />
@@ -37,8 +42,8 @@ export function FinishingsPage() {
       />
 
       <ul className="mx-auto mt-12 grid max-w-6xl gap-6 px-6 sm:grid-cols-2 lg:grid-cols-3">
-        {finishings.map((finishing) => (
-          <li key={finishing.slug}>
+        {finishings.map((finishing, index) => (
+          <li key={finishing.slug} data-revelar data-retraso={String((index % 3) + 1)}>
             <button
               type="button"
               onClick={() => setSelected(finishing)}
