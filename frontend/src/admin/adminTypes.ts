@@ -100,3 +100,26 @@ export interface SaveFinishingPayload {
   imageUrl: string
   displayOrder: number
 }
+
+export interface FilaReporte {
+  clave: string
+  etiqueta: string
+  visitas: number
+  visitantes: number
+}
+
+export interface Reporte {
+  desde: string
+  hasta: string
+  resumen: {
+    visitas: number
+    visitantes: number
+    visitasPeriodoPrevio: number
+    visitantesPeriodoPrevio: number
+    cotizaciones: number
+  }
+  porDia: { dia: string; visitas: number; visitantes: number }[]
+  paginas: FilaReporte[]
+  productos: FilaReporte[]
+  origenes: FilaReporte[]
+}

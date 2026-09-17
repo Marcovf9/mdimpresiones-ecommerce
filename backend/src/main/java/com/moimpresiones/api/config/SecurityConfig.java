@@ -50,6 +50,7 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.GET, "/api/categories/**", "/api/products/**",
                                 "/api/finishings/**", "/api/search", "/api/contact").permitAll()
                         .requestMatchers(HttpMethod.POST, "/api/quotes").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/api/track").permitAll()
                         .requestMatchers(HttpMethod.POST, "/api/auth/login").permitAll()
                         .requestMatchers(properties.getMediaPublicPath() + "/**").permitAll()
                         .requestMatchers(HttpMethod.GET, "/sitemap.xml", "/robots.txt").permitAll()

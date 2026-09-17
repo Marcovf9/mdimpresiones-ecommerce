@@ -66,11 +66,27 @@ export function PrivacidadPage() {
         </p>
       </LegalSection>
 
-      <LegalSection title="6. Cookies y seguimiento">
+      <LegalSection title="6. Cookies y estadísticas de visitas">
         <p>
-          Este sitio no usa cookies de publicidad ni de seguimiento de terceros. El panel de
-          administración guarda datos en el navegador de quien lo usa, solo para mantener la sesión
-          iniciada.
+          <strong>Este sitio no usa cookies</strong> de publicidad ni de seguimiento, ni comparte
+          datos con Google ni con ninguna otra empresa de analítica.
+        </p>
+        <p>
+          Sí llevamos una estadística propia de cuántas personas visitan el sitio y qué secciones
+          miran, para saber qué les interesa. Para contar visitantes distintos sin identificar a
+          nadie, el servidor genera un código a partir de la dirección IP, el navegador y la fecha
+          del día. Ese código <strong>no se puede revertir</strong> para recuperar la dirección
+          original y <strong>cambia todos los días</strong>, así que no permite seguir a una misma
+          persona a lo largo del tiempo.
+        </p>
+        <p>
+          No guardamos direcciones IP, ni identificadores de dispositivo, ni nada que permita
+          reconocerte. De los enlaces por los que llega la gente guardamos únicamente el dominio
+          (por ejemplo, «instagram.com»), nunca la dirección completa.
+        </p>
+        <p>
+          El panel de administración guarda datos en el navegador de quien lo usa, solo para
+          mantener la sesión iniciada.
         </p>
       </LegalSection>
 

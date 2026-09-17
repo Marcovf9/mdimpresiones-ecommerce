@@ -4,6 +4,7 @@ import { AuthProvider, useAuth } from './AuthContext'
 import { LoginPage } from './pages/LoginPage'
 import { DashboardPage } from './pages/DashboardPage'
 import { QuotesPage } from './pages/QuotesPage'
+import { ReportesPage } from './pages/ReportesPage'
 import { ProductsPage } from './pages/ProductsPage'
 import { ProductEditorPage } from './pages/ProductEditorPage'
 import { CategoriesPage } from './pages/CategoriesPage'
@@ -28,6 +29,7 @@ function AdminRoutes() {
     <Routes>
       <Route element={<AdminLayout />}>
         <Route index element={<DashboardPage />} />
+        <Route path="reportes" element={<ReportesPage />} />
         <Route path="cotizaciones" element={<QuotesPage />} />
         <Route path="productos" element={<ProductsPage />} />
         <Route path="productos/nuevo" element={<ProductEditorPage />} />
