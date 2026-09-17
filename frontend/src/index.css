@@ -27,5 +27,48 @@ html {
 }
 
 body {
-  @apply bg-ink-50 text-ink-900 font-sans antialiased;
+  @apply text-ink-900 font-sans antialiased;
+  background-color: var(--color-ink-50);
+}
+
+/*
+ * Fondo del sitio: papel tenue en lugar del gris plano.
+ *
+ * Dos capas fijas detrás de todo, para una imprenta:
+ *  - resplandores muy suaves en cian y magenta, los colores de la marca, que
+ *    dan profundidad sin teñir el contenido;
+ *  - un grano finísimo que imita la textura del papel.
+ *
+ * Van en ::before del body con position fixed, así no se mueven al hacer
+ * scroll y no interfieren con el apilado de modales ni del menú.
+ */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background-color: #fafafa;
+  background-image:
+    radial-gradient(60rem 40rem at 12% -10%, rgb(0 170 250 / 0.07), transparent 60%),
+    radial-gradient(50rem 35rem at 92% 8%, rgb(248 0 147 / 0.06), transparent 60%),
+    radial-gradient(45rem 45rem at 70% 100%, rgb(255 225 8 / 0.05), transparent 60%);
+}
+
+body::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  opacity: 0.4;
+  /* Ruido generado por SVG: pesa unos cientos de bytes y no pide otra descarga. */
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23g)' opacity='0.35'/%3E%3C/svg%3E");
+}
+
+/* Quien pidió menos movimiento probablemente también prefiera menos ruido visual. */
+@media (prefers-reduced-motion: reduce) {
+  body::after {
+    opacity: 0.2;
+  }
 }

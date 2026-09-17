@@ -2,22 +2,20 @@
  * Datos de la empresa que aparecen en las páginas legales, en el pie y en los
  * datos estructurados que lee Google.
  *
- * ────────────────────────────────────────────────────────────────────────────
- *  COMPLETAR ANTES DE PUBLICAR. Todo lo que quede en cadena vacía se oculta
- *  del sitio, y las páginas legales avisan que falta el dato.
- * ────────────────────────────────────────────────────────────────────────────
+ * Todo lo que quede en cadena vacía se oculta del sitio, y las páginas legales
+ * avisan que falta el dato.
  */
 export const EMPRESA = {
   nombreComercial: 'MO Impresiones',
 
   /** Razón social completa, tal como figura en la constancia de AFIP. */
-  razonSocial: '',
+  razonSocial: 'Mariela Olocco',
 
   /** CUIT con guiones: 30-12345678-9 */
-  cuit: '',
+  cuit: '27-20310329-3',
 
   domicilio: {
-    calle: '',
+    calle: 'José Javier Díaz 50',
     ciudad: 'Córdoba',
     provincia: 'Córdoba',
     codigoPostal: '',
@@ -25,7 +23,7 @@ export const EMPRESA = {
   },
 
   /** Horario de atención, en texto libre. Ej: 'Lunes a viernes de 8 a 17 h'. */
-  horarioAtencion: '',
+  horarioAtencion: 'Lunes a viernes de 8 a 16 h, de corrido',
 
   /** Dominio propio, sin barra final. */
   sitioWeb: 'https://moimpresiones.com',

@@ -35,7 +35,7 @@ export function HomePage() {
     <>
       <Hero />
 
-      <section id="quienes-somos" className="scroll-mt-20 bg-ink-50 py-20 sm:py-28">
+      <section id="quienes-somos" className="scroll-mt-20 py-20 sm:py-28">
         <div className="mx-auto max-w-3xl px-6">
           <p className="font-display text-sm tracking-[0.3em] text-brand-500 uppercase">
             Nuestra historia
