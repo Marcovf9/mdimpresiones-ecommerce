@@ -4,9 +4,12 @@ import { api } from '../api/client'
 import type { ProductDetail } from '../api/types'
 import { useApi } from '../hooks/useApi'
 import { ArrowRightIcon } from '../components/Icons'
-import { ErrorState, LoadingState } from '../components/PageChrome'
+import { ErrorState } from '../components/PageChrome'
 import { usePageMeta } from '../hooks/usePageMeta'
+import { SkeletonFichaProducto } from '../components/Skeletons'
 import { imagenOptimizada } from '../api/imagenes'
+import { Lightbox } from '../components/Lightbox'
+import { ProductosRelacionados } from '../components/ProductosRelacionados'
 
 /** Ficha del producto: descripcion, fotos, ficha tecnica y boton de cotizacion. */
 export function ProductDetailPage() {
@@ -28,7 +31,7 @@ export function ProductDetailPage() {
     image: product?.images[0]?.url,
   })
 
-  if (loading) return <LoadingState label="Cargando el producto" />
+  if (loading) return <SkeletonFichaProducto />
   if (error) return <ErrorState message={error} />
   if (!product) return <ErrorState message="No encontramos ese producto." />
 
@@ -94,6 +97,12 @@ export function ProductDetailPage() {
             <ArrowRightIcon />
           </Link>
         </div>
+
+        <ProductosRelacionados
+          categorySlug={product.categorySlug}
+          categoryName={product.categoryName}
+          slugActual={product.slug}
+        />
       </div>
     </article>
   )
@@ -102,6 +111,7 @@ export function ProductDetailPage() {
 /** Galeria de fotos. Si el producto todavia no tiene, no deja un hueco vacio. */
 function Gallery({ product }: { product: ProductDetail }) {
   const [activeIndex, setActiveIndex] = useState(0)
+  const [visorAbierto, setVisorAbierto] = useState(false)
 
   if (product.images.length === 0) {
     return (
@@ -115,13 +125,31 @@ function Gallery({ product }: { product: ProductDetail }) {
 
   return (
     <div className="mt-10">
-      <img
-        {...imagenOptimizada(active.url, 1100)}
-        alt={active.altText ?? product.name}
-        // contain y no cover: casi todas las fotos son verticales y un recorte
-        // apaisado se comía el producto. El fondo neutro sostiene el encuadre.
-        className="aspect-[4/3] w-full rounded-2xl bg-white object-contain"
-      />
+      <button
+        type="button"
+        onClick={() => setVisorAbierto(true)}
+        aria-label={`Ver ${product.name} en grande`}
+        className="group relative block w-full cursor-zoom-in overflow-hidden rounded-2xl"
+      >
+        <img
+          {...imagenOptimizada(active.url, 1100)}
+          alt={active.altText ?? product.name}
+          // contain y no cover: casi todas las fotos son verticales y un recorte
+          // apaisado se comía el producto. El fondo neutro sostiene el encuadre.
+          className="aspect-[4/3] w-full bg-white object-contain"
+        />
+        <span className="pointer-events-none absolute right-4 bottom-4 rounded-full bg-ink-900/80 px-3 py-1.5 text-xs text-white opacity-0 transition group-hover:opacity-100">
+          Ampliar
+        </span>
+      </button>
+
+      {visorAbierto && (
+        <Lightbox
+          imagenes={product.images}
+          indiceInicial={activeIndex}
+          onCerrar={() => setVisorAbierto(false)}
+        />
+      )}
 
       {product.images.length > 1 && (
         <ul className="mt-4 flex flex-wrap gap-3">
