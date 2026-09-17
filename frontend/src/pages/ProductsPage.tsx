@@ -119,17 +119,27 @@ function ProductGrid({ products }: { products: ProductSummary[] }) {
         <li key={product.slug}>
           <Link
             to={`/productos/${product.slug}`}
-            className="group flex h-full flex-col justify-between gap-3 rounded-xl border border-ink-100 bg-white p-5 transition hover:border-ink-900 hover:shadow-sm"
+            className="group flex h-full flex-col overflow-hidden rounded-xl border border-ink-100 bg-white transition hover:border-ink-900 hover:shadow-sm"
           >
-            <span>
-              <span className="block font-medium text-ink-900">{product.name}</span>
-              {product.summary && (
-                <span className="mt-1 block text-sm text-ink-500">{product.summary}</span>
-              )}
-            </span>
-            <span className="inline-flex items-center gap-1 text-sm font-medium text-brand-500">
-              Ver ficha
-              <ArrowRightIcon className="size-4 transition-transform group-hover:translate-x-1" />
+            {product.coverImageUrl && (
+              <img
+                src={product.coverImageUrl}
+                alt=""
+                loading="lazy"
+                className="aspect-[4/3] w-full bg-ink-50 object-contain"
+              />
+            )}
+            <span className="flex flex-1 flex-col justify-between gap-3 p-5">
+              <span>
+                <span className="block font-medium text-ink-900">{product.name}</span>
+                {product.summary && (
+                  <span className="mt-1 block text-sm text-ink-500">{product.summary}</span>
+                )}
+              </span>
+              <span className="inline-flex items-center gap-1 text-sm font-medium text-brand-500">
+                Ver ficha
+                <ArrowRightIcon className="size-4 transition-transform group-hover:translate-x-1" />
+              </span>
             </span>
           </Link>
         </li>
