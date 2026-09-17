@@ -98,7 +98,9 @@ function Hero() {
         }}
       />
 
-      <div className="absolute inset-0 bg-gradient-to-b from-ink-900/70 via-ink-900/40 to-ink-900" />
+      {/* El degradado es más fuerte en el medio que antes: ahí va el subtítulo,
+          y la foto de la máquina tiene zonas claras que lo dejaban al límite. */}
+      <div className="absolute inset-0 bg-gradient-to-b from-ink-900/75 via-ink-900/65 to-ink-900" />
 
       <div className="relative px-6 text-center">
         <h1 className="font-display text-5xl font-semibold tracking-tight text-white sm:text-7xl lg:text-8xl">

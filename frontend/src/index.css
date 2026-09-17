@@ -2,7 +2,7 @@
 
 /*
  * Tokens de marca de MO Impresiones.
- * Paleta provisoria inspirada en CMYK hasta recibir el manual de marca del cliente.
+ * Los acentos salen del logo del cliente: magenta, cian y amarillo de proceso.
  */
 @theme {
   --color-ink-50: #f6f6f7;
@@ -12,8 +12,11 @@
   --color-ink-700: #2a2a31;
   --color-ink-900: #131317;
 
-  --color-brand-500: #d81f26;
-  --color-brand-600: #b4161c;
+  /* Colores reales de la marca, tomados del logo: las tres barras CMYK. */
+  --color-brand-500: #f80093;
+  --color-brand-600: #d1007c;
+  --color-cian: #00aafa;
+  --color-amarillo: #ffe108;
 
   --font-display: "Archivo", ui-sans-serif, system-ui, sans-serif;
   --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
