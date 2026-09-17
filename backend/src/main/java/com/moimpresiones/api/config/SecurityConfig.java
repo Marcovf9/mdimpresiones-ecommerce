@@ -58,6 +58,22 @@ public class SecurityConfig {
                         .requestMatchers("/api/admin/**").hasRole("ADMIN")
                         // Cualquier endpoint nuevo nace cerrado hasta que se lo habilite arriba.
                         .anyRequest().denyAll())
+                .headers(headers -> headers
+                        // Impide que el sitio se cargue dentro de un iframe ajeno,
+                        // que es como se monta un clickjacking sobre el panel.
+                        .frameOptions(frame -> frame.deny())
+                        .contentTypeOptions(opts -> {})
+                        .referrerPolicy(ref -> ref.policy(
+                                org.springframework.security.web.header.writers.ReferrerPolicyHeaderWriter
+                                        .ReferrerPolicy.STRICT_ORIGIN_WHEN_CROSS_ORIGIN))
+                        // Un ano de HTTPS obligatorio. Solo tiene efecto sobre https,
+                        // asi que no estorba en desarrollo.
+                        .httpStrictTransportSecurity(hsts -> hsts
+                                .includeSubDomains(true)
+                                .maxAgeInSeconds(31_536_000))
+                        // La API solo devuelve JSON: nada deberia ejecutarse desde aca.
+                        .contentSecurityPolicy(csp -> csp
+                                .policyDirectives("default-src 'none'; frame-ancestors 'none'")))
                 .exceptionHandling(handling -> handling
                         .authenticationEntryPoint(new HttpStatusEntryPoint(
                                 org.springframework.http.HttpStatus.UNAUTHORIZED)))

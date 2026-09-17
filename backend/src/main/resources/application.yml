@@ -55,7 +55,8 @@ app:
   jwt:
     # EN PRODUCCION: definir JWT_SECRET (minimo 32 caracteres) como variable de entorno
     secret: ${JWT_SECRET:cambiar-este-secreto-de-desarrollo-moimpresiones-2026}
-    expiration-minutes: ${JWT_EXPIRATION_MINUTES:480}
+    # 2 h: si alguien roba el token, la ventana de uso es corta.
+    expiration-minutes: ${JWT_EXPIRATION_MINUTES:120}
 
 logging:
   level:
