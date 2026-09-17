@@ -6,44 +6,97 @@ import org.junit.jupiter.api.Test;
 
 class WhatsAppLinkBuilderTest {
 
-    private static QuoteRequest sampleQuote() {
+    private static QuoteItem item(String nombre, String cantidad, String formato) {
+        QuoteItem item = new QuoteItem();
+        item.setProductName(nombre);
+        item.setQuantity(cantidad);
+        item.setFormat(formato);
+        return item;
+    }
+
+    private static QuoteRequest pedido(QuoteItem... items) {
         QuoteRequest quote = new QuoteRequest();
         quote.setFullName("Juana Perez");
         quote.setPhone("351 555 1234");
         quote.setCompany("Grafica del Sur");
-        quote.setProductName("Carpetas Institucionales");
-        quote.setQuantity("250");
-        quote.setFormat("A4");
+        for (QuoteItem item : items) {
+            quote.addItem(item);
+        }
         return quote;
     }
 
     @Test
     void armaElMensajeSoloConLosCamposCompletos() {
-        String message = WhatsAppLinkBuilder.buildMessage(sampleQuote());
+        String mensaje = WhatsAppLinkBuilder.buildMessage(
+                pedido(item("Carpetas Institucionales", "250", "A4")));
 
-        assertThat(message)
-                .contains("*Producto:* Carpetas Institucionales")
+        assertThat(mensaje)
+                .contains("*Carpetas Institucionales*")
                 .contains("*Cantidad:* 250")
                 .contains("*Formato:* A4")
                 .contains("*Nombre:* Juana Perez")
                 .contains("*Empresa:* Grafica del Sur");
         // Material y Terminaciones quedaron vacios: no deben aparecer.
-        assertThat(message).doesNotContain("*Material:*").doesNotContain("*Terminaciones:*");
+        assertThat(mensaje).doesNotContain("*Material:*").doesNotContain("*Terminaciones:*");
+    }
+
+    @Test
+    void conUnSoloProductoNoNumeraLaLista() {
+        String mensaje = WhatsAppLinkBuilder.buildMessage(pedido(item("Estuches", "500", null)));
+
+        // Numerar un unico producto suena raro en el chat.
+        assertThat(mensaje).contains("*Estuches*").doesNotContain("1) ");
+    }
+
+    @Test
+    void numeraCuandoHayVariosProductos() {
+        String mensaje = WhatsAppLinkBuilder.buildMessage(pedido(
+                item("Tarjetas personales", "1000", "8,5 x 5 cm"),
+                item("Carpetas Institucionales", "250", "A4"),
+                item("Folletos", "2000", "A5")));
+
+        assertThat(mensaje)
+                .contains("*1) Tarjetas personales*")
+                .contains("*2) Carpetas Institucionales*")
+                .contains("*3) Folletos*")
+                .contains("*Cantidad:* 1000")
+                .contains("*Cantidad:* 2000");
+    }
+
+    @Test
+    void avisaCuandoElClienteAdjuntoArchivos() {
+        QuoteRequest quote = pedido(item("Estuches", "500", null));
+        QuoteAttachment adjunto = new QuoteAttachment();
+        adjunto.setUrl("https://ejemplo/diseno.pdf");
+        adjunto.setFilename("diseno.pdf");
+        quote.addAttachment(adjunto);
+
+        assertThat(WhatsAppLinkBuilder.buildMessage(quote)).contains("Adjunte 1 archivo");
+    }
+
+    @Test
+    void sinNombreDeProductoNoDejaElRenglonVacio() {
+        String mensaje = WhatsAppLinkBuilder.buildMessage(pedido(item(null, "500", "A4")));
+
+        assertThat(mensaje).contains("*Producto a definir*").contains("*Cantidad:* 500");
     }
 
     @Test
     void limpiaElNumeroYCodificaElTexto() {
-        String link = WhatsAppLinkBuilder.buildQuoteLink("+54 9 351 123-4567", sampleQuote());
+        String enlace = WhatsAppLinkBuilder.buildQuoteLink("+54 9 351 123-4567",
+                pedido(item("Estuches", "500", null)));
 
-        assertThat(link).startsWith("https://wa.me/5493511234567?text=");
+        assertThat(enlace).startsWith("https://wa.me/5493511234567?text=");
         // El mensaje viaja url-encoded: sin espacios ni saltos de linea crudos.
-        assertThat(link).doesNotContain(" ").doesNotContain("\n");
+        assertThat(enlace).doesNotContain(" ").doesNotContain("\n");
     }
 
     @Test
     void sinNumeroConfiguradoNoDevuelveEnlace() {
-        assertThat(WhatsAppLinkBuilder.buildQuoteLink("", sampleQuote())).isNull();
-        assertThat(WhatsAppLinkBuilder.buildQuoteLink(null, sampleQuote())).isNull();
+        QuoteRequest quote = pedido(item("Estuches", "500", null));
+
+        assertThat(WhatsAppLinkBuilder.buildQuoteLink("", quote)).isNull();
+        assertThat(WhatsAppLinkBuilder.buildQuoteLink(null, quote)).isNull();
         assertThat(WhatsAppLinkBuilder.buildPlainLink("  ")).isNull();
     }
 }

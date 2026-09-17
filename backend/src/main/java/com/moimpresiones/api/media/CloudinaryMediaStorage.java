@@ -66,14 +66,26 @@ public class CloudinaryMediaStorage implements MediaStorage {
         // Valida el tipo igual que el modo local, antes de gastar una subida.
         MediaTypes.extensionFor(file.getContentType());
 
-        boolean esVideo = "video/mp4".equalsIgnoreCase(file.getContentType());
+        String tipo = file.getContentType() == null ? "" : file.getContentType().toLowerCase();
+        String recurso = switch (tipo) {
+            case "video/mp4" -> "video";
+            // raw y no image: asi el PDF se descarga tal cual, sin que
+            // Cloudinary intente rasterizarlo ni pida permisos de entrega.
+            case "application/pdf" -> "raw";
+            default -> "image";
+        };
+
+        // En recursos raw el identificador incluye la extension, y ademas hace
+        // falta que la URL la traiga para que el navegador sepa que abrir.
+        String nombre = CARPETA + "/" + UUID.randomUUID()
+                + ("raw".equals(recurso) ? MediaTypes.extensionFor(tipo) : "");
 
         try {
             Map<?, ?> resultado = cloudinary.uploader().upload(
                     file.getBytes(),
                     ObjectUtils.asMap(
-                            "public_id", CARPETA + "/" + UUID.randomUUID(),
-                            "resource_type", esVideo ? "video" : "image",
+                            "public_id", nombre,
+                            "resource_type", recurso,
                             "overwrite", false));
 
             Object url = resultado.get("secure_url");
@@ -94,12 +106,28 @@ public class CloudinaryMediaStorage implements MediaStorage {
         if (publicId == null) {
             return;
         }
+        String recurso = recursoDe(publicUrl);
         try {
-            cloudinary.uploader().destroy(publicId, ObjectUtils.emptyMap());
+            // Sin resource_type, destroy asume "image" y no encuentra los PDF.
+            cloudinary.uploader().destroy(publicId, ObjectUtils.asMap("resource_type", recurso));
         } catch (IOException ex) {
             // Un archivo huerfano en Cloudinary no justifica fallar la operacion.
             log.warn("No se pudo borrar {} de Cloudinary: {}", publicId, ex.getMessage());
         }
+    }
+
+    /** El tipo de recurso viaja en la URL: /image/upload/, /video/upload/, /raw/upload/. */
+    static String recursoDe(String url) {
+        if (url == null) {
+            return "image";
+        }
+        if (url.contains("/raw/upload/")) {
+            return "raw";
+        }
+        if (url.contains("/video/upload/")) {
+            return "video";
+        }
+        return "image";
     }
 
     /**
@@ -139,6 +167,12 @@ public class CloudinaryMediaStorage implements MediaStorage {
         }
 
         String publicId = String.join("/", Arrays.copyOfRange(segmentos, desde, segmentos.length));
+
+        // En imagenes y videos la extension no forma parte del identificador;
+        // en raw si, y recortarla haria que el borrado no encuentre el archivo.
+        if ("raw".equals(recursoDe(url))) {
+            return publicId;
+        }
         int punto = publicId.lastIndexOf('.');
         return punto > 0 ? publicId.substring(0, punto) : publicId;
     }

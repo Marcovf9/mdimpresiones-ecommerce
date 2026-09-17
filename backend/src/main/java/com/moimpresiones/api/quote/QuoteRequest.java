@@ -1,12 +1,15 @@
 package com.moimpresiones.api.quote;
 
-import com.moimpresiones.api.catalog.Product;
 import jakarta.persistence.*;
 import java.time.Instant;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Pedido de cotizacion enviado desde la pagina "Cotiza tu proyecto".
- * Se guarda para que la imprenta no dependa solo del chat de WhatsApp.
+ *
+ * <p>Guarda los datos de contacto y agrupa uno o varios productos. Se persiste
+ * para que la imprenta no dependa solo del chat de WhatsApp.
  */
 @Entity
 @Table(name = "quote_requests")
@@ -28,27 +31,6 @@ public class QuoteRequest {
     @Column(length = 180)
     private String company;
 
-    /** Producto elegido del catalogo, si el pedido salio de una ficha. */
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "product_id")
-    private Product product;
-
-    /** Nombre del producto tal como lo escribio el cliente, si no eligio uno del catalogo. */
-    @Column(name = "product_name", length = 180)
-    private String productName;
-
-    @Column(length = 120)
-    private String quantity;
-
-    @Column(name = "format", length = 180)
-    private String format;
-
-    @Column(length = 180)
-    private String material;
-
-    @Column(length = 500)
-    private String finishings;
-
     @Column(columnDefinition = "text")
     private String message;
 
@@ -65,6 +47,43 @@ public class QuoteRequest {
 
     @Column(name = "answered_at")
     private Instant answeredAt;
+
+    @OneToMany(mappedBy = "quote", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OrderBy("displayOrder ASC, id ASC")
+    private List<QuoteItem> items = new ArrayList<>();
+
+    @OneToMany(mappedBy = "quote", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OrderBy("id ASC")
+    private List<QuoteAttachment> attachments = new ArrayList<>();
+
+    public void addItem(QuoteItem item) {
+        item.setQuote(this);
+        item.setDisplayOrder(items.size() + 1);
+        items.add(item);
+    }
+
+    public void addAttachment(QuoteAttachment attachment) {
+        attachment.setQuote(this);
+        attachments.add(attachment);
+    }
+
+    /** Resumen de los productos pedidos, para listados y tableros. */
+    public String describirProductos() {
+        if (items.isEmpty()) {
+            return null;
+        }
+        List<String> nombres = items.stream()
+                .map(QuoteItem::getProductName)
+                .filter(n -> n != null && !n.isBlank())
+                .toList();
+        if (nombres.isEmpty()) {
+            return null;
+        }
+        if (nombres.size() == 1) {
+            return nombres.getFirst();
+        }
+        return nombres.getFirst() + " y " + (nombres.size() - 1) + " más";
+    }
 
     public Long getId() {
         return id;
@@ -106,54 +125,6 @@ public class QuoteRequest {
         this.company = company;
     }
 
-    public Product getProduct() {
-        return product;
-    }
-
-    public void setProduct(Product product) {
-        this.product = product;
-    }
-
-    public String getProductName() {
-        return productName;
-    }
-
-    public void setProductName(String productName) {
-        this.productName = productName;
-    }
-
-    public String getQuantity() {
-        return quantity;
-    }
-
-    public void setQuantity(String quantity) {
-        this.quantity = quantity;
-    }
-
-    public String getFormat() {
-        return format;
-    }
-
-    public void setFormat(String format) {
-        this.format = format;
-    }
-
-    public String getMaterial() {
-        return material;
-    }
-
-    public void setMaterial(String material) {
-        this.material = material;
-    }
-
-    public String getFinishings() {
-        return finishings;
-    }
-
-    public void setFinishings(String finishings) {
-        this.finishings = finishings;
-    }
-
     public String getMessage() {
         return message;
     }
@@ -192,5 +163,21 @@ public class QuoteRequest {
 
     public void setAnsweredAt(Instant answeredAt) {
         this.answeredAt = answeredAt;
+    }
+
+    public List<QuoteItem> getItems() {
+        return items;
+    }
+
+    public void setItems(List<QuoteItem> items) {
+        this.items = items;
+    }
+
+    public List<QuoteAttachment> getAttachments() {
+        return attachments;
+    }
+
+    public void setAttachments(List<QuoteAttachment> attachments) {
+        this.attachments = attachments;
     }
 }

@@ -17,6 +17,9 @@ public class AppProperties {
     /** Carpeta del disco donde se guardan las imagenes, solo en modo local. */
     private String mediaStoragePath = "./uploads";
 
+    /** Donde van los adjuntos de las cotizaciones: "local" o "cloudinary". */
+    private String attachmentProvider = "local";
+
     /** Prefijo de URL bajo el que se publican esas imagenes. */
     private String mediaPublicPath = "/media";
 
@@ -101,6 +104,14 @@ public class AppProperties {
 
     public void setMediaProvider(String mediaProvider) {
         this.mediaProvider = mediaProvider;
+    }
+
+    public String getAttachmentProvider() {
+        return attachmentProvider;
+    }
+
+    public void setAttachmentProvider(String attachmentProvider) {
+        this.attachmentProvider = attachmentProvider;
     }
 
     public String getMediaStoragePath() {

@@ -37,6 +37,27 @@ class CloudinaryMediaStorageTest {
     }
 
     @Test
+    void enRawConservaLaExtensionDelIdentificador() {
+        // Los PDF suben como recurso raw, y ahi la extensión es parte del
+        // identificador: recortarla haría que el borrado no encuentre el archivo.
+        String pdf = "https://res.cloudinary.com/wadqifnu/raw/upload/v1789/moimpresiones/abc-123.pdf";
+
+        assertThat(CloudinaryMediaStorage.extractPublicId(pdf)).isEqualTo("moimpresiones/abc-123.pdf");
+    }
+
+    @Test
+    void reconoceElTipoDeRecursoPorLaUrl() {
+        // destroy sin resource_type asume "image" y no encuentra los PDF ni los videos.
+        assertThat(CloudinaryMediaStorage.recursoDe(
+                "https://res.cloudinary.com/x/raw/upload/v1/a.pdf")).isEqualTo("raw");
+        assertThat(CloudinaryMediaStorage.recursoDe(
+                "https://res.cloudinary.com/x/video/upload/v1/a.mp4")).isEqualTo("video");
+        assertThat(CloudinaryMediaStorage.recursoDe(
+                "https://res.cloudinary.com/x/image/upload/v1/a.png")).isEqualTo("image");
+        assertThat(CloudinaryMediaStorage.recursoDe(null)).isEqualTo("image");
+    }
+
+    @Test
     void devuelveNullCuandoLaUrlNoEsDeCloudinary() {
         // Las URLs del modo local conviven en la base con las de Cloudinary.
         assertThat(CloudinaryMediaStorage.extractPublicId("/media/abc-123.jpg")).isNull();

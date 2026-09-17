@@ -35,13 +35,16 @@ public interface QuoteRequestRepository extends JpaRepository<QuoteRequest, Long
             """, nativeQuery = true)
     List<WeeklyCount> countByWeekSince(@Param("desde") Instant desde);
 
-    /** Que productos piden mas, para saber donde conviene poner el foco. */
+    /**
+     * Que productos piden mas, para saber donde conviene poner el foco.
+     * Cuenta items y no cotizaciones: un pedido puede traer varios productos.
+     */
     @Query("""
-            SELECT p.name AS nombre, p.slug AS slug, COUNT(q) AS cantidad
-            FROM QuoteRequest q
-            JOIN q.product p
+            SELECT p.name AS nombre, p.slug AS slug, COUNT(i) AS cantidad
+            FROM QuoteItem i
+            JOIN i.product p
             GROUP BY p.name, p.slug
-            ORDER BY COUNT(q) DESC
+            ORDER BY COUNT(i) DESC
             """)
     List<ProductDemand> findMostRequestedProducts(Pageable pageable);
 

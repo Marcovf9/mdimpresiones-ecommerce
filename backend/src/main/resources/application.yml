@@ -40,6 +40,12 @@ app:
   media-provider: ${MEDIA_PROVIDER:local}
   # Carpeta del disco, solo cuando media-provider=local
   media-storage-path: ${MEDIA_PATH:./uploads}
+  # Donde van los archivos que adjunta el cliente al cotizar. Se configura
+  # aparte de las fotos porque son privados: solo se abren desde el panel.
+  # Cloudinary bloquea la entrega de PDF salvo que se habilite en la cuenta
+  # (Settings -> Security -> Allow delivery of PDF and ZIP files); mientras
+  # tanto, 'local' es el unico que funciona.
+  attachment-provider: ${ATTACHMENT_PROVIDER:local}
   # URL publica bajo la que se sirven esas imagenes
   media-public-path: /media
   # Dominio del sitio, sin barra final. Necesario para el sitemap.
