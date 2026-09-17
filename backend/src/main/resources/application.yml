@@ -34,7 +34,11 @@ server:
 app:
   # Origenes permitidos para el frontend (separados por coma)
   cors-allowed-origins: ${CORS_ORIGINS:http://localhost:5173}
-  # Carpeta donde se guardan las imagenes subidas desde el panel admin
+  # Donde se guardan las imagenes del panel: 'local' (disco) o 'cloudinary'.
+  # En produccion va cloudinary: el disco del hosting es efimero y cada
+  # despliegue borraria las fotos. Cloudinary necesita CLOUDINARY_URL.
+  media-provider: ${MEDIA_PROVIDER:local}
+  # Carpeta del disco, solo cuando media-provider=local
   media-storage-path: ${MEDIA_PATH:./uploads}
   # URL publica bajo la que se sirven esas imagenes
   media-public-path: /media

@@ -8,38 +8,34 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
-import java.util.Locale;
-import java.util.Map;
 import java.util.UUID;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 /**
- * Guarda en disco las imagenes que sube el panel y devuelve la URL publica.
+ * Guarda las imagenes en el disco del servidor. Es el modo de desarrollo.
+ *
+ * <p><strong>No sirve para produccion en hosting con disco efimero</strong>
+ * (Railway, Render, Fly): cada despliegue borraria todo lo que subio el cliente.
+ * Para eso esta {@link CloudinaryMediaStorage}.
  *
  * <p>El nombre original que manda el navegador nunca se usa como ruta: se genera
  * un UUID y la extension sale del tipo de contenido, de modo que no hay forma de
  * escribir fuera de la carpeta configurada.
  */
 @Service
-public class MediaStorageService {
+@ConditionalOnProperty(name = "app.media-provider", havingValue = "local", matchIfMissing = true)
+public class LocalMediaStorage implements MediaStorage {
 
-    private static final Logger log = LoggerFactory.getLogger(MediaStorageService.class);
-
-    /** Unicos tipos aceptados, con la extension que les corresponde. */
-    private static final Map<String, String> ALLOWED_TYPES = Map.of(
-            "image/jpeg", ".jpg",
-            "image/png", ".png",
-            "image/webp", ".webp",
-            "image/avif", ".avif",
-            "video/mp4", ".mp4");
+    private static final Logger log = LoggerFactory.getLogger(LocalMediaStorage.class);
 
     private final AppProperties properties;
     private Path storageRoot;
 
-    public MediaStorageService(AppProperties properties) {
+    public LocalMediaStorage(AppProperties properties) {
         this.properties = properties;
     }
 
@@ -47,26 +43,13 @@ public class MediaStorageService {
     void init() throws IOException {
         this.storageRoot = Paths.get(properties.getMediaStoragePath()).toAbsolutePath().normalize();
         Files.createDirectories(storageRoot);
-        log.info("Las imagenes del panel se guardan en {}", storageRoot);
+        log.info("Almacenamiento de medios: disco local en {}", storageRoot);
     }
 
-    /**
-     * @return la URL publica del archivo guardado, lista para persistir en la base.
-     * @throws InvalidMediaException si el archivo viene vacio o con un tipo no permitido.
-     */
+    @Override
     public String store(MultipartFile file) {
-        if (file == null || file.isEmpty()) {
-            throw new InvalidMediaException("El archivo esta vacio");
-        }
-
-        String contentType = file.getContentType() == null
-                ? ""
-                : file.getContentType().toLowerCase(Locale.ROOT).trim();
-        String extension = ALLOWED_TYPES.get(contentType);
-        if (extension == null) {
-            throw new InvalidMediaException(
-                    "Formato no admitido. Se aceptan JPG, PNG, WebP, AVIF y MP4.");
-        }
+        MediaTypes.requireNotEmpty(file);
+        String extension = MediaTypes.extensionFor(file.getContentType());
 
         String filename = UUID.randomUUID() + extension;
         Path target = storageRoot.resolve(filename).normalize();
@@ -83,7 +66,7 @@ public class MediaStorageService {
         return properties.getMediaPublicPath() + "/" + filename;
     }
 
-    /** Borra el archivo asociado a una URL publica. No falla si ya no existe. */
+    @Override
     public void delete(String publicUrl) {
         if (publicUrl == null || !publicUrl.startsWith(properties.getMediaPublicPath() + "/")) {
             return;

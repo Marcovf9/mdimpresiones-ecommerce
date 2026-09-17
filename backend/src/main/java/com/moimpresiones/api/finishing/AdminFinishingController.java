@@ -4,7 +4,7 @@ import com.moimpresiones.api.common.ConflictException;
 import com.moimpresiones.api.common.NotFoundException;
 import com.moimpresiones.api.finishing.dto.FinishingDto;
 import com.moimpresiones.api.finishing.dto.SaveFinishingRequest;
-import com.moimpresiones.api.media.MediaStorageService;
+import com.moimpresiones.api.media.MediaStorage;
 import jakarta.validation.Valid;
 import java.util.List;
 import org.springframework.http.HttpStatus;
@@ -18,9 +18,9 @@ import org.springframework.web.bind.annotation.*;
 public class AdminFinishingController {
 
     private final FinishingRepository finishings;
-    private final MediaStorageService media;
+    private final MediaStorage media;
 
-    public AdminFinishingController(FinishingRepository finishings, MediaStorageService media) {
+    public AdminFinishingController(FinishingRepository finishings, MediaStorage media) {
         this.finishings = finishings;
         this.media = media;
     }

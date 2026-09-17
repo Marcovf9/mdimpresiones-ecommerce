@@ -7,7 +7,7 @@ import com.moimpresiones.api.catalog.dto.SaveCategoryRequest;
 import com.moimpresiones.api.catalog.dto.SaveProductRequest;
 import com.moimpresiones.api.common.ConflictException;
 import com.moimpresiones.api.common.NotFoundException;
-import com.moimpresiones.api.media.MediaStorageService;
+import com.moimpresiones.api.media.MediaStorage;
 import java.util.List;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -19,10 +19,10 @@ public class AdminCatalogService {
 
     private final CategoryRepository categories;
     private final ProductRepository products;
-    private final MediaStorageService media;
+    private final MediaStorage media;
 
     public AdminCatalogService(CategoryRepository categories, ProductRepository products,
-            MediaStorageService media) {
+            MediaStorage media) {
         this.categories = categories;
         this.products = products;
         this.media = media;

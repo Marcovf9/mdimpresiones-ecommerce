@@ -76,23 +76,27 @@ export function HomePage() {
 }
 
 /**
- * Nombre del negocio sobre el video de una maquina funcionando.
- * El video se coloca en public/video/imprenta.mp4; si falta, queda el poster
- * y el degradado, asi la portada nunca se ve rota.
+ * Nombre del negocio sobre una foto del taller.
+ *
+ * <p>La imagen se coloca en public/imagenes/portada.jpg. Si falta, queda el
+ * degradado sobre el fondo oscuro y la portada se ve entera igual: el texto
+ * nunca depende de que la foto cargue.
  */
 function Hero() {
   return (
     <section className="relative grid min-h-dvh place-items-center overflow-hidden bg-ink-900">
-      <video
+      <img
+        src="/imagenes/portada.jpg"
+        alt=""
+        aria-hidden="true"
+        // Es lo primero que se ve: la carga ansiosa evita el salto visual.
+        fetchPriority="high"
         className="absolute inset-0 size-full object-cover opacity-60"
-        autoPlay
-        muted
-        loop
-        playsInline
-        poster="/video/imprenta-poster.jpg"
-      >
-        <source src="/video/imprenta.mp4" type="video/mp4" />
-      </video>
+        onError={(event) => {
+          // Sin foto cargada todavia, el degradado sostiene la portada solo.
+          event.currentTarget.style.display = 'none'
+        }}
+      />
 
       <div className="absolute inset-0 bg-gradient-to-b from-ink-900/70 via-ink-900/40 to-ink-900" />
 
