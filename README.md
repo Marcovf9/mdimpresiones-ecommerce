@@ -49,6 +49,8 @@ docker-compose.yml   PostgreSQL para desarrollo local
 | `CORS_ORIGINS`   | `http://localhost:5173`                        | Orígenes permitidos, separados por coma |
 | `MEDIA_PATH`     | `./uploads`                                    | Carpeta de imágenes subidas          |
 | `JWT_SECRET`     | valor de desarrollo                            | **Obligatorio en producción** (mín. 32 caracteres) |
+| `MEDIA_PROVIDER` | `local`                                        | `local` (disco) o `cloudinary` |
+| `CLOUDINARY_URL` | vacío                                          | `cloudinary://<key>:<secret>@wadqifnu`. Obligatorio si `MEDIA_PROVIDER=cloudinary` |
 | `ADMIN_USERNAME` | `admin`                                        | Usuario inicial del panel            |
 | `ADMIN_PASSWORD` | se genera al azar                              | Contraseña inicial del panel         |
 | `WHATSAPP_NUMBER`| vacío                                          | Número internacional sin signos (ej. `5493511234567`) |
@@ -64,6 +66,36 @@ y se imprime **una sola vez** en el log de arranque.
 
 Todo lo que escribe vive bajo `/api/admin/**` y exige el token que devuelve
 `POST /api/auth/login`, enviado como `Authorization: Bearer <token>`.
+
+## Fotos: disco local o Cloudinary
+
+El backend guarda las imágenes del panel donde diga `app.media-provider`:
+
+- **`local`** (por defecto) — disco del servidor. Sirve para desarrollar.
+  **No usar en producción**: en Railway, Render o Fly el disco es efímero y
+  cada despliegue borraría todas las fotos que subió el cliente.
+- **`cloudinary`** — CDN, con las imágenes optimizadas según el dispositivo.
+
+Para usar Cloudinary, copiá `.env.ejemplo` como `.env`, completá `CLOUDINARY_URL`
+y arrancá el backend pasándole el archivo:
+
+```bash
+docker run -d --name moimpresiones-api \
+  --network moimpresiones-ecommerce_default -p 8080:8080 \
+  --env-file .env \
+  -v "$PWD/backend":/app -v moimpresiones-m2:/root/.m2 -w /app \
+  -e DB_URL=jdbc:postgresql://db:5432/moimpresiones \
+  maven:3.9-eclipse-temurin-21 mvn -B spring-boot:run
+```
+
+Para migrar las fotos que ya están en disco, con Cloudinary activo:
+
+```bash
+python3 scripts/importar_fotos.py ~/Downloads/moimpresiones-fotos
+```
+
+El script reemplaza las imágenes de cada producto en vez de sumarlas, así que
+se puede correr las veces que haga falta sin duplicar nada.
 
 ## Antes de publicar
 
