@@ -5,6 +5,7 @@ import com.moimpresiones.api.config.AppProperties;
 import com.moimpresiones.api.quote.dto.ContactInfo;
 import com.moimpresiones.api.quote.dto.CreateQuoteRequest;
 import com.moimpresiones.api.quote.dto.QuoteCreatedResponse;
+import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -19,16 +20,17 @@ public class QuoteService {
     private final ProductRepository products;
     private final AppProperties properties;
 
-    public QuoteService(QuoteRequestRepository quotes, ProductRepository products, AppProperties properties) {
+    public QuoteService(QuoteRequestRepository quotes, ProductRepository products,
+            AppProperties properties) {
         this.quotes = quotes;
         this.products = products;
         this.properties = properties;
     }
 
     /**
-     * Guarda el pedido y devuelve el enlace de WhatsApp con el mensaje armado.
-     * Si el slug del producto no existe se guarda igual: no queremos perder el
-     * contacto por un dato del catalogo.
+     * Guarda el pedido con todos sus productos y devuelve el enlace de WhatsApp
+     * con el mensaje armado. Si el slug de algun producto no existe se guarda
+     * igual: no queremos perder el contacto por un dato del catalogo.
      */
     @Transactional
     public QuoteCreatedResponse create(CreateQuoteRequest request) {
@@ -37,20 +39,38 @@ public class QuoteService {
         quote.setPhone(request.phone().trim());
         quote.setEmail(trimToNull(request.email()));
         quote.setCompany(trimToNull(request.company()));
-        quote.setQuantity(trimToNull(request.quantity()));
-        quote.setFormat(trimToNull(request.format()));
-        quote.setMaterial(trimToNull(request.material()));
-        quote.setFinishings(trimToNull(request.finishings()));
         quote.setMessage(trimToNull(request.message()));
-        quote.setProductName(trimToNull(request.productName()));
 
-        if (request.productSlug() != null && !request.productSlug().isBlank()) {
-            products.findBySlug(request.productSlug().trim()).ifPresentOrElse(
-                    product -> {
-                        quote.setProduct(product);
-                        quote.setProductName(product.getName());
-                    },
-                    () -> log.warn("Cotizacion recibida con un producto desconocido: {}", request.productSlug()));
+        for (CreateQuoteRequest.Item entrada : request.items()) {
+            QuoteItem item = new QuoteItem();
+            item.setQuantity(trimToNull(entrada.quantity()));
+            item.setFormat(trimToNull(entrada.format()));
+            item.setMaterial(trimToNull(entrada.material()));
+            item.setFinishings(trimToNull(entrada.finishings()));
+            item.setNotes(trimToNull(entrada.notes()));
+            item.setProductName(trimToNull(entrada.productName()));
+
+            String slug = trimToNull(entrada.productSlug());
+            if (slug != null) {
+                products.findBySlug(slug).ifPresentOrElse(
+                        producto -> {
+                            item.setProduct(producto);
+                            item.setProductName(producto.getName());
+                        },
+                        () -> log.warn("Cotizacion con un producto desconocido: {}", slug));
+            }
+            quote.addItem(item);
+        }
+
+        List<CreateQuoteRequest.Attachment> adjuntos =
+                request.attachments() == null ? List.of() : request.attachments();
+        for (CreateQuoteRequest.Attachment entrada : adjuntos) {
+            QuoteAttachment adjunto = new QuoteAttachment();
+            adjunto.setStorageKey(entrada.storageKey().trim());
+            adjunto.setFilename(entrada.filename().trim());
+            adjunto.setContentType(trimToNull(entrada.contentType()));
+            adjunto.setSizeBytes(entrada.sizeBytes());
+            quote.addAttachment(adjunto);
         }
 
         QuoteRequest saved = quotes.save(quote);

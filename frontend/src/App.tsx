@@ -10,6 +10,7 @@ import { NotFoundPage } from './pages/NotFoundPage'
 import { TerminosPage } from './pages/TerminosPage'
 import { PrivacidadPage } from './pages/PrivacidadPage'
 import { AdminApp } from './admin/AdminApp'
+import { PresupuestoProvider } from './hooks/usePresupuesto'
 
 export default function App() {
   return (
@@ -19,7 +20,13 @@ export default function App() {
         {/* El panel corre aparte: tiene su propio layout y su propia sesión. */}
         <Route path="/admin/*" element={<AdminApp />} />
 
-        <Route element={<Layout />}>
+        <Route
+          element={
+            <PresupuestoProvider>
+              <Layout />
+            </PresupuestoProvider>
+          }
+        >
           <Route path="/" element={<HomePage />} />
           <Route path="/productos" element={<ProductsPage />} />
           <Route path="/productos/:slug" element={<ProductDetailPage />} />

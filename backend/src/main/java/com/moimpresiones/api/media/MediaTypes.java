@@ -11,7 +11,9 @@ final class MediaTypes {
             "image/png", ".png",
             "image/webp", ".webp",
             "image/avif", ".avif",
-            "video/mp4", ".mp4");
+            "video/mp4", ".mp4",
+            // Los diseños listos para imprimir llegan casi siempre en PDF.
+            "application/pdf", ".pdf");
 
     private MediaTypes() {
     }
@@ -25,7 +27,7 @@ final class MediaTypes {
         String extension = ALLOWED.get(normalized);
         if (extension == null) {
             throw new InvalidMediaException(
-                    "Formato no admitido. Se aceptan JPG, PNG, WebP, AVIF y MP4.");
+                    "Formato no admitido. Se aceptan JPG, PNG, WebP, AVIF, PDF y MP4.");
         }
         return extension;
     }

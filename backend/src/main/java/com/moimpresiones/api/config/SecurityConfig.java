@@ -51,6 +51,7 @@ public class SecurityConfig {
                                 "/api/finishings/**", "/api/search", "/api/contact").permitAll()
                         .requestMatchers(HttpMethod.POST, "/api/quotes").permitAll()
                         .requestMatchers(HttpMethod.POST, "/api/track").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/api/quotes/attachments").permitAll()
                         .requestMatchers(HttpMethod.POST, "/api/auth/login").permitAll()
                         .requestMatchers(properties.getMediaPublicPath() + "/**").permitAll()
                         .requestMatchers(HttpMethod.GET, "/sitemap.xml", "/robots.txt").permitAll()

@@ -48,6 +48,24 @@ export interface Dashboard {
   }[]
 }
 
+export interface AdminQuoteItem {
+  productName: string | null
+  productSlug: string | null
+  quantity: string | null
+  format: string | null
+  material: string | null
+  finishings: string | null
+  notes: string | null
+}
+
+export interface AdminQuoteAttachment {
+  id: number
+  downloadPath: string
+  filename: string
+  contentType: string | null
+  sizeBytes: number | null
+}
+
 export interface AdminQuote {
   id: number
   fullName: string
@@ -55,11 +73,8 @@ export interface AdminQuote {
   phone: string
   whatsappUrl: string | null
   email: string | null
-  productName: string | null
-  quantity: string | null
-  format: string | null
-  material: string | null
-  finishings: string | null
+  items: AdminQuoteItem[]
+  attachments: AdminQuoteAttachment[]
   message: string | null
   status: QuoteStatus
   internalNotes: string | null

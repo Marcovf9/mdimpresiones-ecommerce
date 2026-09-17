@@ -4,6 +4,7 @@ import com.moimpresiones.api.common.NotFoundException;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import java.time.Instant;
+import java.util.List;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
@@ -79,16 +80,32 @@ public class AdminQuoteController {
                 // Enlace para responderle al cliente desde el panel, en un toque.
                 WhatsAppLinkBuilder.buildPlainLink(quote.getPhone()),
                 quote.getEmail(),
-                quote.getProductName(),
-                quote.getQuantity(),
-                quote.getFormat(),
-                quote.getMaterial(),
-                quote.getFinishings(),
+                quote.getItems().stream().map(AdminQuoteController::toItem).toList(),
+                quote.getAttachments().stream().map(AdminQuoteController::toAttachment).toList(),
                 quote.getMessage(),
                 quote.getStatus(),
                 quote.getInternalNotes(),
                 quote.getCreatedAt(),
                 quote.getAnsweredAt());
+    }
+
+    private static ItemDetail toItem(QuoteItem item) {
+        return new ItemDetail(
+                item.getProductName(),
+                item.getProduct() == null ? null : item.getProduct().getSlug(),
+                item.getQuantity(),
+                item.getFormat(),
+                item.getMaterial(),
+                item.getFinishings(),
+                item.getNotes());
+    }
+
+    private static AttachmentDetail toAttachment(QuoteAttachment adjunto) {
+        // Ruta del propio panel, no de Cloudinary: la descarga pasa siempre por
+        // el backend, que comprueba la sesion antes de entregar el archivo.
+        return new AttachmentDetail(adjunto.getId(),
+                "/api/admin/quotes/attachments/" + adjunto.getId(),
+                adjunto.getFilename(), adjunto.getContentType(), adjunto.getSizeBytes());
     }
 
     public record UpdateStatusRequest(
@@ -103,15 +120,26 @@ public class AdminQuoteController {
             String phone,
             String whatsappUrl,
             String email,
-            String productName,
-            String quantity,
-            String format,
-            String material,
-            String finishings,
+            List<ItemDetail> items,
+            List<AttachmentDetail> attachments,
             String message,
             QuoteStatus status,
             String internalNotes,
             Instant createdAt,
             Instant answeredAt) {
+    }
+
+    public record ItemDetail(
+            String productName,
+            String productSlug,
+            String quantity,
+            String format,
+            String material,
+            String finishings,
+            String notes) {
+    }
+
+    public record AttachmentDetail(Long id, String downloadPath, String filename,
+            String contentType, Long sizeBytes) {
     }
 }

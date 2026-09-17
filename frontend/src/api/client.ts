@@ -1,13 +1,14 @@
 import type {
+  ApiErrorBody,
   Category,
   ContactInfo,
   Finishing,
   ProductDetail,
   ProductSummary,
+  QuoteAttachmentValues,
   QuoteCreated,
   QuoteFormValues,
 } from './types'
-import type { ApiErrorBody } from './types'
 
 /** En desarrollo Vite hace proxy de /api al backend en el puerto 8080. */
 const BASE_URL = import.meta.env.VITE_API_URL ?? ''
@@ -72,4 +73,19 @@ export const api = {
       method: 'POST',
       body: JSON.stringify(values),
     }),
+
+  /** Sube un archivo y devuelve la clave con la que se adjunta al pedido. */
+  async subirAdjunto(file: File): Promise<QuoteAttachmentValues> {
+    const form = new FormData()
+    form.append('file', file)
+    const respuesta = await fetch(`${BASE_URL}/api/quotes/attachments`, {
+      method: 'POST',
+      body: form,
+    })
+    if (!respuesta.ok) {
+      const cuerpo = (await respuesta.json().catch(() => null)) as ApiErrorBody | null
+      throw new ApiError(respuesta.status, cuerpo?.message ?? 'No pudimos subir el archivo.')
+    }
+    return respuesta.json() as Promise<QuoteAttachmentValues>
+  },
 }

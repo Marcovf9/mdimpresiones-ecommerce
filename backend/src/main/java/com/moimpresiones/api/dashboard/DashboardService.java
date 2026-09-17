@@ -185,7 +185,7 @@ public class DashboardService {
                 quote.getFullName(),
                 quote.getCompany(),
                 quote.getPhone(),
-                quote.getProductName(),
+                quote.describirProductos(),
                 quote.getStatus().name(),
                 quote.getCreatedAt());
     }

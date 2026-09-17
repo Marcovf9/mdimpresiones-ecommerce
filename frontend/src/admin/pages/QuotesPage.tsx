@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { ApiError } from '../../api/client'
 import { adminApi } from '../adminClient'
-import type { AdminQuote, Page, QuoteStatus } from '../adminTypes'
+import type { AdminQuote, AdminQuoteAttachment, Page, QuoteStatus } from '../adminTypes'
 import { useAdminData } from '../useAdminData'
 import { Banner, Button, Card, EmptyState, Spinner } from '../components/AdminUI'
 import { QuoteStatusBadge } from '../components/QuoteStatusBadge'
@@ -117,13 +117,6 @@ function QuoteCard({ quote, onChanged }: { quote: AdminQuote; onChanged: () => v
     }
   }
 
-  const detalles: [string, string | null][] = [
-    ['Producto', quote.productName],
-    ['Cantidad', quote.quantity],
-    ['Formato', quote.format],
-    ['Material', quote.material],
-    ['Terminaciones', quote.finishings],
-  ]
 
   return (
     <li>
@@ -150,16 +143,36 @@ function QuoteCard({ quote, onChanged }: { quote: AdminQuote; onChanged: () => v
           </div>
         </div>
 
-        <dl className="mt-4 grid gap-x-6 gap-y-2 text-sm sm:grid-cols-2">
-          {detalles
-            .filter(([, value]) => value)
-            .map(([label, value]) => (
-              <div key={label} className="flex gap-2">
-                <dt className="text-ink-500">{label}:</dt>
-                <dd className="text-ink-900">{value}</dd>
-              </div>
-            ))}
-        </dl>
+        <ol className="mt-4 space-y-3">
+          {quote.items.map((item, i) => (
+            <li key={i} className="rounded-lg bg-ink-50 p-3">
+              <p className="font-medium text-ink-900">
+                {quote.items.length > 1 && <span className="text-ink-500">{i + 1}. </span>}
+                {item.productName ?? 'Producto a definir'}
+              </p>
+              <dl className="mt-1 grid gap-x-6 gap-y-1 text-sm sm:grid-cols-2">
+                {(
+                  [
+                    ['Cantidad', item.quantity],
+                    ['Formato', item.format],
+                    ['Material', item.material],
+                    ['Terminaciones', item.finishings],
+                    ['Detalle', item.notes],
+                  ] as [string, string | null][]
+                )
+                  .filter(([, valor]) => valor)
+                  .map(([etiqueta, valor]) => (
+                    <div key={etiqueta} className="flex gap-2">
+                      <dt className="text-ink-500">{etiqueta}:</dt>
+                      <dd className="text-ink-900">{valor}</dd>
+                    </div>
+                  ))}
+              </dl>
+            </li>
+          ))}
+        </ol>
+
+        {quote.attachments.length > 0 && <Adjuntos adjuntos={quote.attachments} />}
 
         {quote.message && (
           <p className="mt-4 rounded-lg bg-ink-50 p-4 text-sm text-ink-700">{quote.message}</p>
@@ -216,5 +229,62 @@ function QuoteCard({ quote, onChanged }: { quote: AdminQuote; onChanged: () => v
         </div>
       </Card>
     </li>
+  )
+}
+
+/**
+ * Los adjuntos no son públicos: se piden con el token de la sesión y se abren
+ * desde memoria. Por eso son botones y no enlaces directos.
+ */
+function Adjuntos({ adjuntos }: { adjuntos: AdminQuoteAttachment[] }) {
+  const [abriendo, setAbriendo] = useState<number | null>(null)
+  const [error, setError] = useState<string | null>(null)
+
+  async function abrir(adjunto: AdminQuoteAttachment) {
+    setAbriendo(adjunto.id)
+    setError(null)
+    try {
+      const url = await adminApi.abrirAdjunto(adjunto.downloadPath)
+      window.open(url, '_blank', 'noopener')
+      // El objeto se libera después: revocarlo ya rompería la pestaña recién abierta.
+      setTimeout(() => URL.revokeObjectURL(url), 60_000)
+    } catch {
+      setError('No pudimos abrir el archivo.')
+    } finally {
+      setAbriendo(null)
+    }
+  }
+
+  return (
+    <div className="mt-4">
+      <p className="text-sm font-medium text-ink-900">
+        Archivos del cliente
+        <span className="ml-2 font-normal text-ink-500">({adjuntos.length})</span>
+      </p>
+      <ul className="mt-2 flex flex-wrap gap-2">
+        {adjuntos.map((adjunto) => (
+          <li key={adjunto.id}>
+            <button
+              type="button"
+              onClick={() => abrir(adjunto)}
+              disabled={abriendo === adjunto.id}
+              className="rounded-lg border border-ink-300 px-3 py-2 text-sm text-ink-900 transition hover:border-ink-900 disabled:opacity-50"
+            >
+              {abriendo === adjunto.id ? 'Abriendo...' : adjunto.filename}
+              {adjunto.sizeBytes != null && (
+                <span className="ml-2 text-xs text-ink-500">
+                  {Math.max(1, Math.round(adjunto.sizeBytes / 1024))} KB
+                </span>
+              )}
+            </button>
+          </li>
+        ))}
+      </ul>
+      {error && (
+        <p role="alert" className="mt-2 text-sm text-brand-600">
+          {error}
+        </p>
+      )}
+    </div>
   )
 }
