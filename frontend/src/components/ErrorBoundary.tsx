@@ -34,7 +34,7 @@ export class ErrorBoundary extends Component<Props, State> {
       <main className="grid min-h-dvh place-items-center bg-ink-900 px-6 text-center">
         <div>
           <p className="font-display text-sm tracking-[0.3em] text-brand-500 uppercase">
-            MD Impresiones
+            MO Impresiones
           </p>
           <h1 className="mt-4 font-display text-3xl font-semibold text-white">
             Algo se rompió de nuestro lado

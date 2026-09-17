@@ -26,7 +26,7 @@ export function LoginPage() {
     <div className="grid min-h-dvh place-items-center bg-ink-900 px-6">
       <div className="w-full max-w-sm">
         <p className="text-center font-display text-sm tracking-[0.3em] text-ink-300 uppercase">
-          MD Impresiones
+          MO Impresiones
         </p>
         <h1 className="mt-2 text-center font-display text-2xl font-semibold text-white">
           Panel de administración

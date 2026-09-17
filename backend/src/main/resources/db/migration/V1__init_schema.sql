@@ -1,4 +1,4 @@
--- Esquema inicial del catalogo de MD Impresiones
+-- Esquema inicial del catalogo de MO Impresiones
 
 CREATE TABLE categories (
     id            BIGSERIAL PRIMARY KEY,

@@ -8,7 +8,7 @@
  * ────────────────────────────────────────────────────────────────────────────
  */
 export const EMPRESA = {
-  nombreComercial: 'MD Impresiones',
+  nombreComercial: 'MO Impresiones',
 
   /** Razón social completa, tal como figura en la constancia de AFIP. */
   razonSocial: '',
@@ -27,8 +27,8 @@ export const EMPRESA = {
   /** Horario de atención, en texto libre. Ej: 'Lunes a viernes de 8 a 17 h'. */
   horarioAtencion: '',
 
-  /** Dominio propio, sin barra final. Ej: 'https://mdimpresiones.com.ar' */
-  sitioWeb: '',
+  /** Dominio propio, sin barra final. */
+  sitioWeb: 'https://moimpresiones.com',
 
   fundacion: 1994,
 } as const

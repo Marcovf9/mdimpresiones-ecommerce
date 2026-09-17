@@ -1,11 +1,11 @@
 spring:
   application:
-    name: mdimpresiones-api
+    name: moimpresiones-api
 
   datasource:
-    url: ${DB_URL:jdbc:postgresql://localhost:5432/mdimpresiones}
-    username: ${DB_USER:mdimpresiones}
-    password: ${DB_PASSWORD:mdimpresiones}
+    url: ${DB_URL:jdbc:postgresql://localhost:5432/moimpresiones}
+    username: ${DB_USER:moimpresiones}
+    password: ${DB_PASSWORD:moimpresiones}
 
   jpa:
     open-in-view: false
@@ -39,19 +39,20 @@ app:
   # URL publica bajo la que se sirven esas imagenes
   media-public-path: /media
   # Dominio del sitio, sin barra final. Necesario para el sitemap.
-  public-url: ${SITE_URL:}
+  public-url: ${SITE_URL:https://moimpresiones.com}
   # Datos de contacto de la imprenta (menu Contacto y armado del mensaje de WhatsApp).
-  # Completar con los datos reales antes de publicar.
+  # Son publicos: van en el sitio. Se pueden pisar por variable de entorno.
   contact:
-    whatsapp-number: ${WHATSAPP_NUMBER:}
-    instagram-url: ${INSTAGRAM_URL:}
-    email: ${CONTACT_EMAIL:}
+    # +54 9 351 621 1435, en formato internacional sin signos (es lo que acepta wa.me).
+    whatsapp-number: ${WHATSAPP_NUMBER:5493516211435}
+    instagram-url: ${INSTAGRAM_URL:https://instagram.com/mo.impresiones}
+    email: ${CONTACT_EMAIL:contacto@moimpresiones.com}
 
   jwt:
     # EN PRODUCCION: definir JWT_SECRET (minimo 32 caracteres) como variable de entorno
-    secret: ${JWT_SECRET:cambiar-este-secreto-de-desarrollo-mdimpresiones-2026}
+    secret: ${JWT_SECRET:cambiar-este-secreto-de-desarrollo-moimpresiones-2026}
     expiration-minutes: ${JWT_EXPIRATION_MINUTES:480}
 
 logging:
   level:
-    com.mdimpresiones.api: INFO
+    com.moimpresiones.api: INFO

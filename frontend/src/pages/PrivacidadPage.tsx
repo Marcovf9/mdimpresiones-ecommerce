@@ -7,7 +7,7 @@ export function PrivacidadPage() {
   usePageMeta({
     title: 'Política de privacidad',
     description:
-      'Qué datos personales recolecta MD Impresiones a través del sitio, para qué los usa y cómo ejercer tus derechos.',
+      'Qué datos personales recolecta MO Impresiones a través del sitio, para qué los usa y cómo ejercer tus derechos.',
     path: '/privacidad',
   })
 

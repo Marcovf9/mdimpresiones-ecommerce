@@ -7,7 +7,7 @@ export function TerminosPage() {
   usePageMeta({
     title: 'Términos y condiciones',
     description:
-      'Condiciones de uso del sitio de MD Impresiones y del servicio de solicitud de presupuestos.',
+      'Condiciones de uso del sitio de MO Impresiones y del servicio de solicitud de presupuestos.',
     path: '/terminos',
   })
 

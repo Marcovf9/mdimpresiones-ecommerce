@@ -53,7 +53,7 @@ export function FinishingsPage() {
                 ) : (
                   <div className="grid aspect-[4/3] place-items-center bg-ink-900 text-ink-300">
                     <span className="font-display text-sm tracking-[0.2em] uppercase">
-                      MD Impresiones
+                      MO Impresiones
                     </span>
                   </div>
                 )}
