@@ -43,7 +43,7 @@ export function FinishingsPage() {
         description="El detalle que distingue una pieza. Tocá cada terminación para ver de qué se trata."
       />
 
-      <ul className="mx-auto mt-12 grid max-w-6xl gap-6 px-6 sm:grid-cols-2 lg:grid-cols-3">
+      <ul className="mx-auto mt-7 grid max-w-6xl grid-cols-3 gap-2.5 px-4 sm:mt-10 sm:gap-6 sm:px-6">
         {finishings.map((finishing, index) => (
           <li
             key={finishing.slug}
@@ -58,7 +58,7 @@ export function FinishingsPage() {
             >
               {/* El borde toma el color del rubro al pasar por encima: el acento
                   aparece solo en la interacción, sin cargar la grilla. */}
-              <div className="overflow-hidden rounded-2xl border-2 border-transparent bg-ink-100 transition-colors group-hover:border-[var(--acento)]">
+              <div className="overflow-hidden rounded-lg border border-transparent bg-ink-100 transition-colors group-hover:border-[var(--acento)] sm:rounded-2xl sm:border-2">
                 {finishing.imageUrl ? (
                   <img
                     {...imagenOptimizada(finishing.imageUrl, 480)}
@@ -67,13 +67,13 @@ export function FinishingsPage() {
                   />
                 ) : (
                   <div className="grid aspect-[4/3] place-items-center bg-ink-900 text-ink-300">
-                    <span className="font-display text-sm tracking-[0.2em] uppercase">
+                    <span className="font-display text-[0.6rem] tracking-[0.15em] uppercase sm:text-sm">
                       MO Impresiones
                     </span>
                   </div>
                 )}
               </div>
-              <h2 className="mt-3 font-display text-lg font-medium text-ink-900 transition group-hover:text-brand-500">
+              <h2 className="mt-2 font-display text-xs leading-snug font-medium text-ink-900 transition group-hover:text-brand-500 sm:mt-3 sm:text-lg">
                 {finishing.name}
               </h2>
             </button>

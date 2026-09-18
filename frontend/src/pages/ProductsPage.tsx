@@ -250,7 +250,7 @@ function ProductGrid({ products }: { products: ProductSummary[] }) {
   }
 
   return (
-    <ul className="grid gap-3 sm:grid-cols-2">
+    <ul className="grid grid-cols-2 gap-2.5 sm:gap-3">
       {products.map((product) => (
         <li key={product.slug}>
           <Link
@@ -267,16 +267,20 @@ function ProductGrid({ products }: { products: ProductSummary[] }) {
                 />
               </div>
             )}
-            <span className="flex flex-1 flex-col justify-between gap-3 p-5">
+            <span className="flex flex-1 flex-col justify-between gap-2 p-3 sm:gap-3 sm:p-5">
               <span>
-                <span className="block font-medium text-ink-900">{product.name}</span>
+                <span className="block text-sm leading-snug font-medium text-ink-900 sm:text-base">
+                  {product.name}
+                </span>
+                {/* El resumen se oculta en celular: a media pantalla de ancho
+                    alarga la tarjeta sin agregar nada que no diga el nombre. */}
                 {product.summary && (
-                  <span className="mt-1 block text-sm text-ink-500">{product.summary}</span>
+                  <span className="mt-1 hidden text-sm text-ink-500 sm:block">{product.summary}</span>
                 )}
               </span>
-              <span className="inline-flex items-center gap-1 text-sm font-medium text-brand-500">
+              <span className="inline-flex items-center gap-1 text-xs font-medium text-brand-500 sm:text-sm">
                 Ver ficha
-                <ArrowRightIcon className="size-4 transition-transform group-hover:translate-x-1" />
+                <ArrowRightIcon className="size-3.5 transition-transform group-hover:translate-x-1 sm:size-4" />
               </span>
             </span>
           </Link>

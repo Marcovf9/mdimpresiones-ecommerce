@@ -107,7 +107,7 @@ function RubrosDestacados() {
           Seis familias de productos, cada una con sus materiales, formatos y terminaciones.
         </p>
 
-        <ul className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+        <ul className="mt-7 grid grid-cols-2 gap-2.5 sm:mt-8 sm:gap-4 lg:grid-cols-3">
           {categories.map((category, indice) => {
             const portada = category.products.find((p) => p.coverImageUrl)?.coverImageUrl
             return (
@@ -129,14 +129,18 @@ function RubrosDestacados() {
                     )}
                   </div>
                   <div
-                    className="border-t-4 p-5"
+                    className="border-t-4 p-3 sm:p-5"
                     style={{ borderTopColor: `var(--color-${colorDeRubro(indice)})` }}
                   >
-                    <h3 className="font-display text-lg font-semibold text-ink-900">
+                    <h3 className="font-display text-sm leading-snug font-semibold text-ink-900 sm:text-lg">
                       {category.name}
                     </h3>
-                    <p className="mt-1 line-clamp-2 text-sm text-ink-500">{category.description}</p>
-                    <span className="mt-3 inline-flex items-center gap-1 text-sm font-medium text-brand-500">
+                    {/* La descripción se guarda para tablet en adelante: en dos
+                        columnas de celular no entra sin apretar todo. */}
+                    <p className="mt-1 hidden line-clamp-2 text-sm text-ink-500 sm:block">
+                      {category.description}
+                    </p>
+                    <span className="mt-2 inline-flex items-center gap-1 text-xs font-medium text-brand-500 sm:mt-3 sm:text-sm">
                       Ver los {category.products.length}
                       <ArrowRightIcon className="size-4 transition-transform group-hover:translate-x-1" />
                     </span>
