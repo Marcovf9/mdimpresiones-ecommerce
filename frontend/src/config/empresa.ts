@@ -20,6 +20,11 @@ export const EMPRESA = {
     provincia: 'Córdoba',
     codigoPostal: '',
     pais: 'Argentina',
+    /**
+     * Coordenadas del local, para el marcador del mapa. Se obtuvieron
+     * geocodificando la dirección con Nominatim (OpenStreetMap).
+     */
+    coordenadas: { lat: -31.4453068, lon: -64.1974441 },
   },
 
   /** Horario de atención, en texto libre. Ej: 'Lunes a viernes de 8 a 17 h'. */
