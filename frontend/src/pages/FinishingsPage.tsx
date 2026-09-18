@@ -1,4 +1,5 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
+import { useSearchParams } from 'react-router-dom'
 import { api } from '../api/client'
 import type { Finishing } from '../api/types'
 import { useApi } from '../hooks/useApi'
@@ -22,6 +23,22 @@ export function FinishingsPage() {
 
   // Se vuelve a observar cuando llegan los datos: antes no había qué revelar.
   useRevelarAlScroll([finishings])
+
+  // Con ?ver=slug se abre directo esa terminación, que es como se llega desde
+  // la ficha de un producto.
+  const [searchParams, setSearchParams] = useSearchParams()
+  const pedida = searchParams.get('ver')
+  useEffect(() => {
+    if (!pedida || !finishings) return
+    const encontrada = finishings.find((f) => f.slug === pedida)
+    if (encontrada) setSelected(encontrada)
+  }, [pedida, finishings])
+
+  function cerrar() {
+    setSelected(null)
+    // Se limpia el parámetro: si no, volver atrás reabriría el modal.
+    if (pedida) setSearchParams({}, { replace: true })
+  }
 
   usePageMeta({
     title: 'Terminaciones',
@@ -86,7 +103,7 @@ export function FinishingsPage() {
 
       <Modal
         open={selected !== null}
-        onClose={() => setSelected(null)}
+        onClose={cerrar}
         title={selected?.name ?? ''}
       >
         {selected && (

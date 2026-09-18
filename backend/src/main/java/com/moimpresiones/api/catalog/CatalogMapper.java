@@ -45,7 +45,10 @@ public final class CatalogMapper {
                 product.getCategory().getName(),
                 product.isActive(),
                 product.getImages().stream().map(CatalogMapper::toDto).toList(),
-                product.getSpecs().stream().map(CatalogMapper::toDto).toList());
+                product.getSpecs().stream().map(CatalogMapper::toDto).toList(),
+                product.getFinishings().stream()
+                        .map(f -> new ProductDetailDto.FinishingRefDto(f.getSlug(), f.getName()))
+                        .toList());
     }
 
     public static ImageDto toDto(ProductImage image) {

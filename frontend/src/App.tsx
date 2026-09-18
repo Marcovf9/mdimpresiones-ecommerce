@@ -10,6 +10,7 @@ import { QuotePage } from './pages/QuotePage'
 import { NotFoundPage } from './pages/NotFoundPage'
 import { TerminosPage } from './pages/TerminosPage'
 import { PrivacidadPage } from './pages/PrivacidadPage'
+import { PreguntasPage } from './pages/PreguntasPage'
 
 /**
  * El panel se carga aparte y solo al entrar a /admin. Venía en el mismo
@@ -48,6 +49,7 @@ export default function App() {
           <Route path="/productos/:slug" element={<ProductDetailPage />} />
           <Route path="/terminaciones" element={<FinishingsPage />} />
           <Route path="/cotiza" element={<QuotePage />} />
+          <Route path="/preguntas-frecuentes" element={<PreguntasPage />} />
           <Route path="/terminos" element={<TerminosPage />} />
           <Route path="/privacidad" element={<PrivacidadPage />} />
           <Route path="*" element={<NotFoundPage />} />

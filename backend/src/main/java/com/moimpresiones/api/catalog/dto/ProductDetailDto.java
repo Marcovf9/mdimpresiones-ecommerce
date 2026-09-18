@@ -13,5 +13,11 @@ public record ProductDetailDto(
         String categoryName,
         boolean active,
         List<ImageDto> images,
-        List<SpecDto> specs) {
+        List<SpecDto> specs,
+        /** Terminaciones que admite, para poder explicarlas desde la ficha. */
+        List<FinishingRefDto> finishings) {
+
+    /** Referencia minima a una terminacion: lo justo para enlazarla. */
+    public record FinishingRefDto(String slug, String name) {
+    }
 }

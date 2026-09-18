@@ -126,6 +126,7 @@ export function MenuOverlay({ open, onClose, contact }: MenuOverlayProps) {
             )}
           </li>
           <MenuLink to="/terminaciones" onClick={onClose}>Terminaciones</MenuLink>
+          <MenuLink to="/preguntas-frecuentes" onClick={onClose}>Preguntas frecuentes</MenuLink>
 
           <li>
             <button
