@@ -49,6 +49,8 @@ docker-compose.yml   PostgreSQL para desarrollo local
 | `CORS_ORIGINS`   | `http://localhost:5173`                        | Orígenes permitidos, separados por coma |
 | `MEDIA_PATH`     | `./uploads`                                    | Carpeta de imágenes subidas          |
 | `JWT_SECRET`     | valor de desarrollo                            | **Obligatorio en producción** (mín. 32 caracteres) |
+| `MAIL_HOST` / `MAIL_PORT` / `MAIL_USERNAME` / `MAIL_PASSWORD` | vacío | SMTP para avisar cotizaciones nuevas. Sin `MAIL_HOST`, apagado |
+| `NOTIFICACIONES_DESTINO` | `contacto@moimpresiones.com` | Quién recibe el aviso |
 | `MEDIA_PROVIDER` | `local`                                        | `local` (disco) o `cloudinary` |
 | `CLOUDINARY_URL` | vacío                                          | `cloudinary://<key>:<secret>@wadqifnu`. Obligatorio si `MEDIA_PROVIDER=cloudinary` |
 | `ADMIN_USERNAME` | `admin`                                        | Usuario inicial del panel            |

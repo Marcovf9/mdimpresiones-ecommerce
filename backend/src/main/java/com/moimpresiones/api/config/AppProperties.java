@@ -30,6 +30,33 @@ public class AppProperties {
 
     private Contact contact = new Contact();
 
+    private Notificaciones notificaciones = new Notificaciones();
+
+    /** Avisos por correo al equipo de la imprenta. */
+    public static class Notificaciones {
+
+        private String emailDestino = "";
+
+        /** Si queda vacio se usa la cuenta con la que se autentica el SMTP. */
+        private String emailRemitente = "";
+
+        public String getEmailDestino() {
+            return emailDestino;
+        }
+
+        public void setEmailDestino(String emailDestino) {
+            this.emailDestino = emailDestino;
+        }
+
+        public String getEmailRemitente() {
+            return emailRemitente;
+        }
+
+        public void setEmailRemitente(String emailRemitente) {
+            this.emailRemitente = emailRemitente;
+        }
+    }
+
     public static class Jwt {
         private String secret = "";
         private long expirationMinutes = 480;
@@ -144,6 +171,14 @@ public class AppProperties {
 
     public void setJwt(Jwt jwt) {
         this.jwt = jwt;
+    }
+
+    public Notificaciones getNotificaciones() {
+        return notificaciones;
+    }
+
+    public void setNotificaciones(Notificaciones notificaciones) {
+        this.notificaciones = notificaciones;
     }
 
     public Contact getContact() {

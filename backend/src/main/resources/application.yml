@@ -21,6 +21,20 @@ spring:
     locations: classpath:db/migration
     baseline-on-migrate: true
 
+  # Correo saliente para los avisos de cotizacion. Sin MAIL_HOST no se crea el
+  # cliente de correo y los avisos quedan apagados, sin romper nada.
+  mail:
+    host: ${MAIL_HOST:}
+    port: ${MAIL_PORT:587}
+    username: ${MAIL_USERNAME:}
+    password: ${MAIL_PASSWORD:}
+    properties:
+      mail.smtp.auth: ${MAIL_SMTP_AUTH:true}
+      mail.smtp.starttls.enable: ${MAIL_STARTTLS:true}
+      mail.smtp.connectiontimeout: 10000
+      mail.smtp.timeout: 10000
+      mail.smtp.writetimeout: 10000
+
   servlet:
     multipart:
       max-file-size: 8MB
@@ -57,6 +71,11 @@ app:
     whatsapp-number: ${WHATSAPP_NUMBER:5493516211435}
     instagram-url: ${INSTAGRAM_URL:https://instagram.com/mo.impresiones}
     email: ${CONTACT_EMAIL:contacto@moimpresiones.com}
+
+  # A quien avisar cuando entra una cotizacion, y desde que direccion.
+  notificaciones:
+    email-destino: ${NOTIFICACIONES_DESTINO:contacto@moimpresiones.com}
+    email-remitente: ${NOTIFICACIONES_REMITENTE:}
 
   jwt:
     # EN PRODUCCION: definir JWT_SECRET (minimo 32 caracteres) como variable de entorno
