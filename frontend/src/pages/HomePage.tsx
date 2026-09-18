@@ -6,7 +6,7 @@ import { BarraCMYK, colorDeRubro } from '../components/BarraCMYK'
 import { api } from '../api/client'
 import type { Category } from '../api/types'
 import { useApi } from '../hooks/useApi'
-import { imagenOptimizada } from '../api/imagenes'
+import { ImagenConCarga } from '../components/ImagenConCarga'
 import { useRevelarAlScroll } from '../hooks/useRevelarAlScroll'
 
 /**
@@ -116,18 +116,13 @@ function RubrosDestacados() {
                   to={`/productos?rubro=${encodeURIComponent(category.slug)}`}
                   className="group flex h-full flex-col overflow-hidden rounded-2xl border border-ink-100 bg-white transition duration-300 hover:-translate-y-1 hover:border-ink-900 hover:shadow-lg"
                 >
-                  <div className="overflow-hidden bg-ink-50">
-                    {portada ? (
-                      <img
-                        {...imagenOptimizada(portada, 520)}
-                        alt=""
-                        loading="lazy"
-                        className="aspect-[4/3] w-full object-contain transition duration-500 group-hover:scale-105"
-                      />
-                    ) : (
-                      <div className="aspect-[4/3] w-full" />
-                    )}
-                  </div>
+                  <ImagenConCarga
+                    url={portada}
+                    ancho={520}
+                    alt=""
+                    contenedorClassName="aspect-[4/3] w-full"
+                    className="size-full object-contain transition duration-500 group-hover:scale-105"
+                  />
                   <div
                     className="border-t-4 p-3 sm:p-5"
                     style={{ borderTopColor: `var(--color-${colorDeRubro(indice)})` }}

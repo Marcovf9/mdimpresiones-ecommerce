@@ -10,6 +10,7 @@ import { colorDeRubro } from '../components/BarraCMYK'
 import { useRevelarAlScroll } from '../hooks/useRevelarAlScroll'
 import { SkeletonTerminaciones } from '../components/Skeletons'
 import { imagenOptimizada } from '../api/imagenes'
+import { ImagenConCarga } from '../components/ImagenConCarga'
 
 /**
  * Grilla de terminaciones con el nombre debajo de cada imagen.
@@ -60,10 +61,12 @@ export function FinishingsPage() {
                   aparece solo en la interacción, sin cargar la grilla. */}
               <div className="overflow-hidden rounded-lg border border-transparent bg-ink-100 transition-colors group-hover:border-[var(--acento)] sm:rounded-2xl sm:border-2">
                 {finishing.imageUrl ? (
-                  <img
-                    {...imagenOptimizada(finishing.imageUrl, 480)}
+                  <ImagenConCarga
+                    url={finishing.imageUrl}
+                    ancho={480}
                     alt={finishing.name}
-                    className="aspect-[4/3] w-full object-cover transition duration-500 group-hover:scale-105"
+                    contenedorClassName="aspect-[4/3] w-full"
+                    className="size-full object-cover transition duration-500 group-hover:scale-105"
                   />
                 ) : (
                   <div className="grid aspect-[4/3] place-items-center bg-ink-900 text-ink-300">
