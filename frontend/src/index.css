@@ -15,6 +15,13 @@
   /* Colores reales de la marca, tomados del logo: las tres barras CMYK. */
   --color-brand-500: #f80093;
   --color-brand-600: #d1007c;
+  /*
+   * El magenta del logo (500) sobre fondo claro da 3,7:1, por debajo del 4,5:1
+   * que hace falta para leer texto cómodo. Para texto y botones sobre fondo
+   * claro se usa 600 (5,0:1) y 700 para el hover. El 500 queda para barras,
+   * bordes y texto sobre negro, donde sí alcanza (4,8:1).
+   */
+  --color-brand-700: #ad0067;
   --color-cian: #00aafa;
   --color-amarillo: #ffe108;
 

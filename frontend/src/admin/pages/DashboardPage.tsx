@@ -84,7 +84,7 @@ export function DashboardPage() {
                   </span>
                   <Link
                     to={`/admin/productos/${item.slug}`}
-                    className="flex-1 truncate text-ink-900 transition hover:text-brand-500"
+                    className="flex-1 truncate text-ink-900 transition hover:text-brand-600"
                   >
                     {item.nombre}
                   </Link>
@@ -103,7 +103,7 @@ export function DashboardPage() {
           action={
             <Link
               to="/admin/cotizaciones"
-              className="text-sm font-medium text-brand-500 transition hover:text-brand-600"
+              className="text-sm font-medium text-brand-600 transition hover:text-brand-700"
             >
               Ver todas
             </Link>
@@ -161,7 +161,7 @@ function Kpi({
       <p className="text-sm text-ink-500">{label}</p>
       <p
         className={`mt-1 font-display text-3xl font-semibold ${
-          alert ? 'text-brand-500' : 'text-ink-900'
+          alert ? 'text-brand-600' : 'text-ink-900'
         }`}
       >
         {value}

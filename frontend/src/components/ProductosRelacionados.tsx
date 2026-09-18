@@ -74,7 +74,7 @@ export function ProductosRelacionados({
                     <span className="text-xs leading-snug font-medium text-ink-900 sm:text-sm">
                       {producto.name}
                     </span>
-                    <ArrowRightIcon className="size-4 shrink-0 text-brand-500 transition-transform group-hover:translate-x-1" />
+                    <ArrowRightIcon className="size-4 shrink-0 text-brand-600 transition-transform group-hover:translate-x-1" />
                   </span>
                 </Link>
               </li>

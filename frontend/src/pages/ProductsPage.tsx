@@ -277,7 +277,7 @@ function ProductGrid({ products }: { products: ProductSummary[] }) {
                   <span className="mt-1 hidden text-sm text-ink-500 sm:block">{product.summary}</span>
                 )}
               </span>
-              <span className="inline-flex items-center gap-1 text-xs font-medium text-brand-500 sm:text-sm">
+              <span className="inline-flex items-center gap-1 text-xs font-medium text-brand-600 sm:text-sm">
                 Ver ficha
                 <ArrowRightIcon className="size-3.5 transition-transform group-hover:translate-x-1 sm:size-4" />
               </span>

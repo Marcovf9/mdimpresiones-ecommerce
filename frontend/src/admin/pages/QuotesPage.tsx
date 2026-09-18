@@ -206,7 +206,7 @@ function QuoteCard({ quote, onChanged }: { quote: AdminQuote; onChanged: () => v
               href={quote.whatsappUrl}
               target="_blank"
               rel="noreferrer"
-              className="inline-flex items-center rounded-lg bg-brand-500 px-4 py-2 text-sm font-medium text-white transition hover:bg-brand-600"
+              className="inline-flex items-center rounded-lg bg-brand-600 px-4 py-2 text-sm font-medium text-white transition hover:bg-brand-700"
             >
               Responder por WhatsApp
             </a>

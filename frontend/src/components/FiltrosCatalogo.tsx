@@ -50,7 +50,7 @@ export function FiltrosCatalogo({
           {/* Con el panel cerrado, el contador es la única señal de que hay
               filtros puestos. */}
           {cuantos > 0 && (
-            <span className="grid min-w-5 place-items-center rounded-full bg-brand-500 px-1.5 text-xs font-medium text-white">
+            <span className="grid min-w-5 place-items-center rounded-full bg-brand-600 px-1.5 text-xs font-medium text-white">
               {cuantos}
             </span>
           )}
@@ -63,7 +63,7 @@ export function FiltrosCatalogo({
           <button
             type="button"
             onClick={() => onCambio({})}
-            className="shrink-0 py-4 text-sm font-medium text-brand-500 transition hover:text-brand-600"
+            className="shrink-0 py-4 text-sm font-medium text-brand-600 transition hover:text-brand-700"
           >
             Limpiar
           </button>

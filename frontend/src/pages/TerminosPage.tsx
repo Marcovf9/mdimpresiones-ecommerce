@@ -92,7 +92,7 @@ export function TerminosPage() {
         <p>
           El tratamiento de los datos que se cargan en el formulario de cotización se explica en
           nuestra{' '}
-          <Link to="/privacidad" className="text-brand-500 underline hover:text-brand-600">
+          <Link to="/privacidad" className="text-brand-600 underline hover:text-brand-700">
             política de privacidad
           </Link>
           .

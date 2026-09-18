@@ -22,7 +22,7 @@ type ButtonVariant = 'primary' | 'secondary' | 'danger' | 'ghost'
 const BUTTON_STYLES: Record<ButtonVariant, string> = {
   primary: 'bg-ink-900 text-white hover:bg-ink-700',
   secondary: 'border border-ink-300 text-ink-900 hover:border-ink-900',
-  danger: 'border border-brand-500 text-brand-600 hover:bg-brand-500 hover:text-white',
+  danger: 'border border-brand-500 text-brand-600 hover:bg-brand-600 hover:text-white',
   ghost: 'text-ink-500 hover:bg-ink-100 hover:text-ink-900',
 }
 
@@ -78,7 +78,7 @@ export function TextField({
     <label className="block">
       <span className="mb-1.5 block text-sm font-medium text-ink-900">
         {label}
-        {required && <span className="text-brand-500"> *</span>}
+        {required && <span className="text-brand-600"> *</span>}
       </span>
       <input
         type={type}

@@ -67,7 +67,7 @@ export function ComoTrabajamos() {
         <div className="mt-8">
           <Link
             to="/preguntas-frecuentes"
-            className="inline-flex items-center gap-2 text-sm font-medium text-brand-500 transition hover:text-brand-600"
+            className="inline-flex items-center gap-2 text-sm font-medium text-brand-600 transition hover:text-brand-700"
           >
             Ver preguntas frecuentes
             <ArrowRightIcon className="size-4" />

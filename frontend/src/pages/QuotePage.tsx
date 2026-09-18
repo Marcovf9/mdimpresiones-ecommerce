@@ -141,7 +141,7 @@ export function QuotePage() {
               <p className="text-ink-500">Todavía no agregaste nada.</p>
               <Link
                 to="/productos"
-                className="mt-3 inline-block text-sm font-medium text-brand-500 underline transition hover:text-brand-600"
+                className="mt-3 inline-block text-sm font-medium text-brand-600 underline transition hover:text-brand-700"
               >
                 Ver el catálogo
               </Link>
@@ -179,7 +179,7 @@ export function QuotePage() {
                       type="button"
                       onClick={() => quitar(indice)}
                       aria-label={`Quitar ${item.productName || 'producto ' + (indice + 1)}`}
-                      className="-m-2 grid size-11 place-items-center rounded-lg text-ink-500 transition hover:bg-ink-100 hover:text-brand-600"
+                      className="-m-2 grid size-11 place-items-center rounded-lg text-ink-500 transition hover:bg-ink-100 hover:text-brand-700"
                     >
                       ✕
                     </button>
@@ -332,7 +332,7 @@ function Campo({
     <label className="block">
       <span className="mb-1.5 block text-sm font-medium text-ink-900">
         {label}
-        {required && <span className="text-brand-500"> *</span>}
+        {required && <span className="text-brand-600"> *</span>}
       </span>
       <input
         type={type}
@@ -409,7 +409,7 @@ function Adjuntos({
                 type="button"
                 onClick={() => onCambio(adjuntos.filter((_, j) => j !== i))}
                 aria-label={`Quitar ${adjunto.filename}`}
-                className="-m-2 grid size-11 place-items-center rounded-lg text-ink-500 transition hover:text-brand-600"
+                className="-m-2 grid size-11 place-items-center rounded-lg text-ink-500 transition hover:text-brand-700"
               >
                 ✕
               </button>

@@ -152,7 +152,7 @@ export function MenuOverlay({ open, onClose, contact }: MenuOverlayProps) {
               Cotizá tu producto
               {/* El contador avisa que hay un pedido a medio armar. */}
               {items.length > 0 && (
-                <span className="grid min-w-7 place-items-center rounded-full bg-brand-500 px-2 py-0.5 text-sm font-medium text-white">
+                <span className="grid min-w-7 place-items-center rounded-full bg-brand-600 px-2 py-0.5 text-sm font-medium text-white">
                   {items.length}
                 </span>
               )}

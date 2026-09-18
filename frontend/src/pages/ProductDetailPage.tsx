@@ -100,7 +100,7 @@ export function ProductDetailPage() {
                     className="inline-flex items-center gap-1.5 rounded-full border border-ink-300 px-3 py-2 text-sm text-ink-700 transition hover:border-ink-900 hover:text-ink-900"
                   >
                     {terminacion.name}
-                    <span aria-hidden="true" className="text-brand-500">?</span>
+                    <span aria-hidden="true" className="text-brand-600">?</span>
                   </Link>
                 </li>
               ))}
@@ -118,7 +118,7 @@ export function ProductDetailPage() {
           <div className="mt-8 flex flex-col items-center gap-4">
             <Link
               to={`/cotiza?producto=${encodeURIComponent(product.slug)}`}
-              className="inline-flex items-center gap-2 rounded-full bg-brand-500 px-8 py-4 font-medium text-white transition hover:bg-brand-600"
+              className="inline-flex items-center gap-2 rounded-full bg-brand-600 px-8 py-4 font-medium text-white transition hover:bg-brand-700"
             >
               Cotizá este producto
               <ArrowRightIcon />

@@ -78,7 +78,7 @@ const PREGUNTAS: Pregunta[] = [
         </p>
         <p className="mt-2">
           La ficha de cada producto lo dice en la fila «Cantidad mínima».{' '}
-          <Link to="/productos" className="text-brand-500 underline hover:text-brand-600">
+          <Link to="/productos" className="text-brand-600 underline hover:text-brand-700">
             Ver el catálogo
           </Link>
           .
@@ -92,7 +92,7 @@ const PREGUNTAS: Pregunta[] = [
       <p>
         No publicamos precios porque cambian con la cantidad, el papel, el formato y las
         terminaciones: el mismo producto puede costar muy distinto según cómo se haga.{' '}
-        <Link to="/cotiza" className="text-brand-500 underline hover:text-brand-600">
+        <Link to="/cotiza" className="text-brand-600 underline hover:text-brand-700">
           Pedí un presupuesto
         </Link>{' '}
         y te pasamos el número con el detalle.
@@ -118,7 +118,7 @@ const PREGUNTAS: Pregunta[] = [
     respuesta: (
       <p>
         Son terminaciones: lo que se le hace a la pieza después de imprimirla.{' '}
-        <Link to="/terminaciones" className="text-brand-500 underline hover:text-brand-600">
+        <Link to="/terminaciones" className="text-brand-600 underline hover:text-brand-700">
           Están todas explicadas con fotos
         </Link>
         , y en la ficha de cada producto podés tocar la que te interese para ver de qué se trata.
