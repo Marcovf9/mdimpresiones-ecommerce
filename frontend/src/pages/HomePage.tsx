@@ -111,6 +111,18 @@ function RubrosDestacados() {
           Seis familias de productos, cada una con sus materiales, formatos y terminaciones.
         </p>
 
+        {/* Todas las fotos del catálogo son trabajos que salieron de esta
+            imprenta, y hasta ahora nada lo decía: el visitante las tomaba por
+            fotos de catálogo genéricas. Decirlo cambia cómo se leen. */}
+        <p className="mt-4 flex w-fit max-w-full items-center gap-2.5 rounded-full bg-ink-900 px-4 py-2.5 text-sm text-white">
+          {/* La barra va envuelta: por dentro usa w-full, así que pasarle un
+              ancho por className no alcanza para acotarla. */}
+          <span className="w-7 shrink-0">
+            <BarraCMYK />
+          </span>
+          <span>Todo lo que ves acá lo imprimimos nosotros</span>
+        </p>
+
         <ul className="mt-7 grid grid-cols-2 gap-2.5 sm:mt-8 sm:gap-4 lg:grid-cols-3">
           {categories.map((category, indice) => {
             const portada = category.products.find((p) => p.coverImageUrl)?.coverImageUrl
