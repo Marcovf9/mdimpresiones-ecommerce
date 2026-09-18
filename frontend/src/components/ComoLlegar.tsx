@@ -35,6 +35,13 @@ export function ComoLlegar() {
               <p className="mt-2 text-ink-500">{EMPRESA.horarioAtencion}</p>
             )}
 
+            {/* Que envían a todo el país es un dato que amplía el público del
+                sitio, y acá es donde alguien se pregunta si tiene que viajar. */}
+            <p className="mt-4 text-ink-700">
+              Podés retirar en el local o pedir que te lo enviemos:{' '}
+              <strong>hacemos envíos a todo el país</strong>.
+            </p>
+
             <div className="mt-6 flex flex-wrap gap-3">
               <a
                 href={`https://www.google.com/maps/search/?api=1&query=${consulta}`}
