@@ -1,13 +1,10 @@
 import { EMPRESA, domicilioCompleto } from '../config/empresa'
 import { BarraCMYK } from './BarraCMYK'
+import { Mapa } from './Mapa'
 import { ArrowRightIcon } from './Icons'
 
 /**
  * Dónde queda el local y cómo llegar.
- *
- * <p>El mapa se carga en un iframe de OpenStreetMap y no de Google Maps: el de
- * Google instala cookies de seguimiento apenas se muestra, y eso obligaría a
- * poner un cartel de consentimiento que hoy el sitio no necesita.
  *
  * <p>Si no hay domicilio cargado la sección no se muestra, en vez de dibujar un
  * mapa apuntando a cualquier lado.
@@ -17,8 +14,6 @@ export function ComoLlegar() {
   if (!domicilio) return null
 
   const consulta = encodeURIComponent(`${domicilio}, ${EMPRESA.domicilio.pais}`)
-  // Recuadro alrededor del centro de Córdoba, suficiente para ubicar la calle.
-  const mapa = `https://www.openstreetmap.org/export/embed.html?bbox=-64.2050%2C-31.4280%2C-64.1650%2C-31.4050&layer=mapnik`
 
   return (
     <section className="border-t border-ink-100 py-14 sm:py-24">
@@ -64,12 +59,7 @@ export function ComoLlegar() {
           </div>
 
           <div className="overflow-hidden rounded-2xl border border-ink-100">
-            <iframe
-              title={`Mapa con la ubicación de ${EMPRESA.nombreComercial}`}
-              src={mapa}
-              loading="lazy"
-              className="h-72 w-full border-0 sm:h-80"
-            />
+            <Mapa className="h-72 w-full sm:h-80" />
           </div>
         </div>
       </div>

@@ -157,3 +157,23 @@ body::after {
     background-color: rgb(0 170 250 / 0.06);
   }
 }
+
+/*
+ * Marcador del mapa: un punto en el magenta de la marca con la punta hacia
+ * abajo, para que se lea enseguida sobre el mapa claro.
+ */
+.marcador-mo {
+  display: block;
+  width: 1.625rem;
+  height: 1.625rem;
+  border: 3px solid #fff;
+  border-radius: 50% 50% 50% 0;
+  background-color: var(--color-brand-500);
+  box-shadow: 0 2px 6px rgb(0 0 0 / 0.3);
+  transform: rotate(-45deg);
+}
+
+/* Leaflet dibuja su atribución con su propio tipo; la alineamos con el sitio. */
+.leaflet-container {
+  font-family: inherit;
+}
