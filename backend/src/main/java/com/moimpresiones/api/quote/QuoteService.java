@@ -2,12 +2,15 @@ package com.moimpresiones.api.quote;
 
 import com.moimpresiones.api.catalog.ProductRepository;
 import com.moimpresiones.api.config.AppProperties;
+import com.moimpresiones.api.notificaciones.CotizacionRecibida;
+import com.moimpresiones.api.notificaciones.MailCotizacion;
 import com.moimpresiones.api.quote.dto.ContactInfo;
 import com.moimpresiones.api.quote.dto.CreateQuoteRequest;
 import com.moimpresiones.api.quote.dto.QuoteCreatedResponse;
 import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -19,12 +22,14 @@ public class QuoteService {
     private final QuoteRequestRepository quotes;
     private final ProductRepository products;
     private final AppProperties properties;
+    private final ApplicationEventPublisher eventos;
 
     public QuoteService(QuoteRequestRepository quotes, ProductRepository products,
-            AppProperties properties) {
+            AppProperties properties, ApplicationEventPublisher eventos) {
         this.quotes = quotes;
         this.products = products;
         this.properties = properties;
+        this.eventos = eventos;
     }
 
     /**
@@ -74,6 +79,15 @@ public class QuoteService {
         }
 
         QuoteRequest saved = quotes.save(quote);
+
+        // El mail se arma aca, con todo en memoria, y se manda recien cuando la
+        // transaccion confirma: ver NotificadorCotizaciones.
+        String urlPanel = properties.getPublicUrl() == null || properties.getPublicUrl().isBlank()
+                ? null
+                : properties.getPublicUrl().replaceAll("/$", "") + "/admin/cotizaciones";
+        eventos.publishEvent(new CotizacionRecibida(saved.getId(),
+                MailCotizacion.asunto(saved), MailCotizacion.cuerpo(saved, urlPanel)));
+
         String whatsappUrl = WhatsAppLinkBuilder.buildQuoteLink(
                 properties.getContact().getWhatsappNumber(), saved);
         return new QuoteCreatedResponse(saved.getId(), whatsappUrl);
