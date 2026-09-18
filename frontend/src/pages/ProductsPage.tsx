@@ -7,7 +7,7 @@ import { ArrowRightIcon, ChevronDownIcon } from '../components/Icons'
 import { PageHeader, ErrorState } from '../components/PageChrome'
 import { usePageMeta } from '../hooks/usePageMeta'
 import { SkeletonListadoProductos } from '../components/Skeletons'
-import { imagenOptimizada } from '../api/imagenes'
+import { ImagenConCarga } from '../components/ImagenConCarga'
 import { FiltrosCatalogo, type FiltrosElegidos } from '../components/FiltrosCatalogo'
 import { colorDeRubro } from '../components/BarraCMYK'
 
@@ -258,14 +258,13 @@ function ProductGrid({ products }: { products: ProductSummary[] }) {
             className="group flex h-full flex-col overflow-hidden rounded-xl border border-ink-100 bg-white transition duration-300 hover:-translate-y-1 hover:border-ink-900 hover:shadow-lg"
           >
             {product.coverImageUrl && (
-              <div className="overflow-hidden bg-ink-50">
-                <img
-                  {...imagenOptimizada(product.coverImageUrl, 560)}
-                  alt=""
-                  loading="lazy"
-                  className="aspect-[4/3] w-full object-contain transition duration-500 group-hover:scale-105"
-                />
-              </div>
+              <ImagenConCarga
+                url={product.coverImageUrl}
+                ancho={560}
+                alt=""
+                contenedorClassName="aspect-[4/3] w-full"
+                className="size-full object-contain transition duration-500 group-hover:scale-105"
+              />
             )}
             <span className="flex flex-1 flex-col justify-between gap-2 p-3 sm:gap-3 sm:p-5">
               <span>

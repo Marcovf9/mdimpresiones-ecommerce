@@ -2,7 +2,7 @@ import { Link } from 'react-router-dom'
 import { api } from '../api/client'
 import type { Category, ProductSummary } from '../api/types'
 import { useApi } from '../hooks/useApi'
-import { imagenOptimizada } from '../api/imagenes'
+import { ImagenConCarga } from './ImagenConCarga'
 import { ArrowRightIcon } from './Icons'
 
 /**
@@ -62,14 +62,13 @@ export function ProductosRelacionados({
                   className="group flex h-full flex-col overflow-hidden rounded-xl border border-ink-100 bg-white transition duration-300 hover:-translate-y-1 hover:border-ink-900 hover:shadow-lg"
                 >
                   {producto.coverImageUrl && (
-                    <div className="overflow-hidden bg-ink-50">
-                      <img
-                        {...imagenOptimizada(producto.coverImageUrl, 400)}
-                        alt=""
-                        loading="lazy"
-                        className="aspect-[4/3] w-full object-contain transition duration-500 group-hover:scale-105"
-                      />
-                    </div>
+                    <ImagenConCarga
+                      url={producto.coverImageUrl}
+                      ancho={400}
+                      alt=""
+                      contenedorClassName="aspect-[4/3] w-full"
+                      className="size-full object-contain transition duration-500 group-hover:scale-105"
+                    />
                   )}
                   <span className="flex flex-1 items-center justify-between gap-2 p-3 sm:p-4">
                     <span className="text-xs leading-snug font-medium text-ink-900 sm:text-sm">
