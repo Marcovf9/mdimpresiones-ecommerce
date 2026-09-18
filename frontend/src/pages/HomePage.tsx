@@ -2,6 +2,7 @@ import { useEffect } from 'react'
 import { Link, useLocation } from 'react-router-dom'
 import { ArrowRightIcon } from '../components/Icons'
 import { usePageMeta } from '../hooks/usePageMeta'
+import { BarraCMYK } from '../components/BarraCMYK'
 import { useRevelarAlScroll } from '../hooks/useRevelarAlScroll'
 
 /**
@@ -109,6 +110,7 @@ function Hero() {
         <h1 className="font-display text-5xl font-semibold tracking-tight text-white sm:text-7xl lg:text-8xl">
           MO Impresiones
         </h1>
+        <BarraCMYK className="mx-auto mt-6 max-w-40" grosor="gruesa" />
         <p className="mx-auto mt-6 max-w-xl text-lg text-ink-100">
           Imprenta en Córdoba, Argentina. Más de 30 años de oficio gráfico,
           del pliego a la terminación final.

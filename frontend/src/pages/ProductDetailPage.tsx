@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import { api } from '../api/client'
 import type { ProductDetail } from '../api/types'
@@ -114,9 +114,36 @@ export function ProductDetailPage() {
 }
 
 /** Galeria de fotos. Si el producto todavia no tiene, no deja un hueco vacio. */
+/** Cada cuánto pasa sola a la foto siguiente. */
+const INTERVALO_CARRUSEL = 3_000
+
 function Gallery({ product }: { product: ProductDetail }) {
   const [activeIndex, setActiveIndex] = useState(0)
   const [visorAbierto, setVisorAbierto] = useState(false)
+  /**
+   * Al elegir una foto a mano, el avance automático se detiene: seguir pasando
+   * solo le sacaría al visitante justo lo que quiso mirar.
+   */
+  const [manual, setManual] = useState(false)
+
+  const cantidad = product.images.length
+
+  useEffect(() => {
+    if (manual || visorAbierto || cantidad < 2) return
+    // Quien pidió menos movimiento en su sistema no debería ver nada girando.
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return
+
+    const ciclo = window.setInterval(
+      () => setActiveIndex((i) => (i + 1) % cantidad),
+      INTERVALO_CARRUSEL,
+    )
+    return () => window.clearInterval(ciclo)
+  }, [manual, visorAbierto, cantidad])
+
+  function elegir(indice: number) {
+    setManual(true)
+    setActiveIndex(indice)
+  }
 
   if (product.images.length === 0) {
     return (
@@ -137,11 +164,14 @@ function Gallery({ product }: { product: ProductDetail }) {
         className="group relative block w-full cursor-zoom-in overflow-hidden rounded-2xl"
       >
         <img
+          // La clave cambia con la foto: así React la vuelve a montar y el
+          // fundido se dispara en cada paso.
+          key={active.url}
           {...imagenOptimizada(active.url, 1100)}
           alt={active.altText ?? product.name}
           // contain y no cover: casi todas las fotos son verticales y un recorte
           // apaisado se comía el producto. El fondo neutro sostiene el encuadre.
-          className="aspect-[4/3] w-full bg-white object-contain"
+          className="foto-carrusel aspect-[4/3] w-full bg-white object-contain"
         />
         <span className="pointer-events-none absolute right-4 bottom-4 rounded-full bg-ink-900/80 px-3 py-1.5 text-xs text-white opacity-0 transition group-hover:opacity-100">
           Ampliar
@@ -162,7 +192,7 @@ function Gallery({ product }: { product: ProductDetail }) {
             <li key={image.id}>
               <button
                 type="button"
-                onClick={() => setActiveIndex(index)}
+                onClick={() => elegir(index)}
                 aria-label={`Ver foto ${index + 1} de ${product.name}`}
                 aria-current={index === activeIndex}
                 className={`overflow-hidden rounded-lg border-2 transition ${

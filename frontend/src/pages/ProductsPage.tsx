@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useSearchParams } from 'react-router-dom'
 import { api } from '../api/client'
 import type { Category, FiltrosDisponibles, ProductSummary } from '../api/types'
 import { useApi } from '../hooks/useApi'
@@ -9,6 +9,7 @@ import { usePageMeta } from '../hooks/usePageMeta'
 import { SkeletonListadoProductos } from '../components/Skeletons'
 import { imagenOptimizada } from '../api/imagenes'
 import { FiltrosCatalogo, type FiltrosElegidos } from '../components/FiltrosCatalogo'
+import { colorDeRubro } from '../components/BarraCMYK'
 
 /**
  * Listado de rubros.
@@ -23,7 +24,12 @@ import { FiltrosCatalogo, type FiltrosElegidos } from '../components/FiltrosCata
 export function ProductsPage() {
   const { data: categories, loading, error } = useApi<Category[]>(() => api.categories(), [])
   const [filtros, setFiltros] = useState<FiltrosElegidos>({})
+  const [searchParams, setSearchParams] = useSearchParams()
   const hayFiltro = Boolean(filtros.finishing || filtros.material)
+
+  // Con ?rubro=slug se entra directo a un rubro, que es como llega quien lo
+  // elige desde el menú del celular.
+  const rubroElegido = searchParams.get('rubro')
 
   usePageMeta({
     title: 'Productos',
@@ -37,6 +43,8 @@ export function ProductsPage() {
   if (!categories || categories.length === 0) {
     return <ErrorState message="Todavía no hay productos cargados." />
   }
+
+  const rubro = rubroElegido ? categories.find((c) => c.slug === rubroElegido) : undefined
 
   return (
     <div className="pt-24 pb-20">
@@ -53,6 +61,8 @@ export function ProductsPage() {
       <div className="mx-auto mt-6 max-w-6xl px-6">
         {hayFiltro ? (
           <ResultadosFiltrados filtros={filtros} />
+        ) : rubro ? (
+          <RubroSolo rubro={rubro} onVerTodos={() => setSearchParams({})} />
         ) : (
           <>
             <AcordeonMovil categories={categories} />
@@ -106,15 +116,42 @@ function ResultadosFiltrados({ filtros }: { filtros: FiltrosElegidos }) {
   )
 }
 
+/** Un solo rubro, con la vuelta al catálogo completo siempre a la vista. */
+function RubroSolo({ rubro, onVerTodos }: { rubro: Category; onVerTodos: () => void }) {
+  return (
+    <section>
+      <div className="flex flex-wrap items-center justify-between gap-3">
+        <div>
+          <h2 className="font-display text-2xl font-semibold text-ink-900">{rubro.name}</h2>
+          {rubro.description && <p className="mt-1 max-w-2xl text-ink-500">{rubro.description}</p>}
+        </div>
+        <button
+          type="button"
+          onClick={onVerTodos}
+          className="rounded-lg border border-ink-300 px-3 py-2 text-sm font-medium text-ink-900 transition hover:border-ink-900"
+        >
+          Ver todos los rubros
+        </button>
+      </div>
+      <div className="mt-6">
+        <ProductGrid products={rubro.products} />
+      </div>
+    </section>
+  )
+}
+
 function AcordeonMovil({ categories }: { categories: Category[] }) {
   // null es un estado válido: todos cerrados.
   const [abierto, setAbierto] = useState<string | null>(null)
 
   return (
     <ul className="space-y-2 lg:hidden">
-      {categories.map((category) => {
+      {categories.map((category, indice) => {
         const estaAbierto = category.slug === abierto
         const panelId = `rubro-${category.slug}`
+        // Cada rubro lleva uno de los tres colores del logo, rotando, para
+        // distinguirse de un vistazo sin salirse de la paleta.
+        const color = colorDeRubro(indice)
         return (
           <li key={category.slug}>
             <button
@@ -122,7 +159,8 @@ function AcordeonMovil({ categories }: { categories: Category[] }) {
               onClick={() => setAbierto((actual) => (actual === category.slug ? null : category.slug))}
               aria-expanded={estaAbierto}
               aria-controls={panelId}
-              className={`flex w-full items-center justify-between gap-4 rounded-xl border px-5 py-4 text-left transition ${
+              style={{ borderLeftColor: `var(--color-${color})` }}
+              className={`flex w-full items-center justify-between gap-4 rounded-xl border border-l-4 px-5 py-4 text-left transition ${
                 estaAbierto
                   ? 'border-ink-900 bg-ink-900 text-white'
                   : 'border-ink-100 bg-white text-ink-900'
@@ -164,8 +202,9 @@ function VistaEscritorio({ categories }: { categories: Category[] }) {
   return (
     <div className="hidden gap-8 lg:grid lg:grid-cols-[minmax(0,22rem)_1fr]">
       <ul className="space-y-2">
-        {categories.map((category) => {
+        {categories.map((category, indice) => {
           const isActive = category.slug === active.slug
+          const color = colorDeRubro(indice)
           return (
             <li key={category.slug}>
               <button
@@ -174,7 +213,8 @@ function VistaEscritorio({ categories }: { categories: Category[] }) {
                 onFocus={() => setElegido(category.slug)}
                 onClick={() => setElegido(category.slug)}
                 aria-current={isActive}
-                className={`flex w-full items-center justify-between gap-4 rounded-xl border px-5 py-4 text-left transition ${
+                style={{ borderLeftColor: `var(--color-${color})` }}
+                className={`flex w-full items-center justify-between gap-4 rounded-xl border border-l-4 px-5 py-4 text-left transition ${
                   isActive
                     ? 'border-ink-900 bg-ink-900 text-white'
                     : 'border-ink-100 bg-white text-ink-900 hover:border-ink-300'
