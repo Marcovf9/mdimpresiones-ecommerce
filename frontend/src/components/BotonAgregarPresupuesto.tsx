@@ -8,6 +8,9 @@ import { itemVacio, usePresupuesto } from '../hooks/usePresupuesto'
  *
  * <p>Después de agregar no se navega a ningún lado a propósito: lo habitual es
  * seguir mirando y sumar otra pieza, y llevarlo al formulario cortaría eso.
+ *
+ * <p>Vive dentro del recuadro negro de la ficha, así que sus colores son para
+ * fondo oscuro. Antes tenía texto y borde negros y no se veía.
  */
 export function BotonAgregarPresupuesto({ product }: { product: ProductDetail }) {
   const { agregar, contiene } = usePresupuesto()
@@ -28,7 +31,7 @@ export function BotonAgregarPresupuesto({ product }: { product: ProductDetail })
   if (yaEsta) {
     return (
       <div className="flex flex-wrap items-center gap-3">
-        <span className="inline-flex items-center gap-2 rounded-full bg-emerald-500/10 px-4 py-2 text-sm font-medium text-emerald-700">
+        <span className="inline-flex items-center gap-2 rounded-full bg-emerald-400/15 px-4 py-2 text-sm font-medium text-emerald-300">
           Agregado a tu presupuesto
         </span>
         <Link
@@ -45,7 +48,7 @@ export function BotonAgregarPresupuesto({ product }: { product: ProductDetail })
     <button
       type="button"
       onClick={alAgregar}
-      className="inline-flex items-center gap-2 rounded-full border border-ink-900 px-6 py-3 font-medium text-ink-900 transition hover:bg-ink-900 hover:text-white"
+      className="inline-flex items-center gap-2 rounded-full border border-white/40 px-6 py-3 font-medium text-white transition hover:bg-white hover:text-ink-900"
     >
       Agregar a mi presupuesto
     </button>

@@ -84,7 +84,7 @@ export function ProductsPage() {
                       <td className="px-4 py-3 text-right">
                         <Link
                           to={`/admin/productos/${product.slug}`}
-                          className="text-sm font-medium text-brand-500 transition hover:text-brand-600"
+                          className="text-sm font-medium text-brand-600 transition hover:text-brand-700"
                         >
                           Editar
                         </Link>

@@ -47,24 +47,24 @@ export function HomePage() {
 
       <section id="quienes-somos" data-revelar className="scroll-mt-20 py-14 sm:py-28">
         <div className="mx-auto max-w-3xl px-6">
-          <p className="font-display text-sm tracking-[0.3em] text-brand-500 uppercase">
+          <p className="font-display text-xs tracking-[0.3em] text-brand-600 uppercase sm:text-sm">
             Nuestra historia
           </p>
-          <h2 className="mt-3 font-display text-4xl font-semibold text-ink-900 sm:text-5xl">
+          <h2 className="mt-2 font-display text-3xl font-semibold text-ink-900 sm:mt-3 sm:text-5xl">
             ¿Quiénes somos?
           </h2>
 
-          <div className="mt-8 space-y-5 text-lg leading-relaxed text-ink-700">
+          <div className="mt-6 space-y-4 leading-relaxed text-ink-700 sm:mt-8 sm:space-y-5 sm:text-lg">
             {ABOUT_PARAGRAPHS.map((paragraph) => (
               <p key={paragraph.slice(0, 40)}>{paragraph}</p>
             ))}
           </div>
 
-          <p className="mt-10 border-l-4 border-brand-500 pl-6 font-display text-2xl text-ink-900 italic">
+          <p className="mt-8 border-l-4 border-brand-500 pl-5 font-display text-xl text-ink-900 italic sm:mt-10 sm:pl-6 sm:text-2xl">
             Más de tres décadas imprimiendo ideas y construyendo relaciones.
           </p>
 
-          <div className="mt-12 flex flex-wrap gap-4">
+          <div className="mt-9 flex flex-wrap gap-3 sm:mt-12 sm:gap-4">
             <Link
               to="/productos"
               className="inline-flex items-center gap-2 rounded-full bg-ink-900 px-7 py-3 font-medium text-white transition hover:bg-ink-700"
@@ -151,7 +151,7 @@ function RubrosDestacados() {
                     <p className="mt-1 hidden line-clamp-2 text-sm text-ink-500 sm:block">
                       {category.description}
                     </p>
-                    <span className="mt-2 inline-flex items-center gap-1 text-xs font-medium text-brand-500 sm:mt-3 sm:text-sm">
+                    <span className="mt-2 inline-flex items-center gap-1 text-xs font-medium text-brand-600 sm:mt-3 sm:text-sm">
                       Ver los {category.products.length}
                       <ArrowRightIcon className="size-4 transition-transform group-hover:translate-x-1" />
                     </span>

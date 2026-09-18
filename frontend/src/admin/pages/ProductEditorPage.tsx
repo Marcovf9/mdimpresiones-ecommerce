@@ -167,7 +167,7 @@ export function ProductEditorPage() {
 
           <label className="block">
             <span className="mb-1.5 block text-sm font-medium text-ink-900">
-              Rubro<span className="text-brand-500"> *</span>
+              Rubro<span className="text-brand-600"> *</span>
             </span>
             <select
               value={form.categorySlug}

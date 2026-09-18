@@ -14,7 +14,7 @@ export function PageHeader({
   return (
     <header className="mx-auto max-w-6xl px-6">
       <BarraCMYK className="max-w-24" />
-      <p className="mt-3 font-display text-xs tracking-[0.3em] text-brand-500 uppercase sm:mt-4 sm:text-sm">
+      <p className="mt-3 font-display text-xs tracking-[0.3em] text-brand-600 uppercase sm:mt-4 sm:text-sm">
         {eyebrow}
       </p>
       <h1 className="mt-2 font-display text-3xl font-semibold text-ink-900 sm:mt-3 sm:text-5xl">{title}</h1>

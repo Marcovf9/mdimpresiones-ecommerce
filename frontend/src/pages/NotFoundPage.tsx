@@ -10,7 +10,7 @@ export function NotFoundPage() {
   return (
     <div className="grid min-h-[70dvh] place-items-center px-6 pt-24 text-center">
       <div>
-        <p className="font-display text-sm tracking-[0.3em] text-brand-500 uppercase">Error 404</p>
+        <p className="font-display text-sm tracking-[0.3em] text-brand-600 uppercase">Error 404</p>
         <h1 className="mt-3 font-display text-4xl font-semibold text-ink-900">
           No encontramos esa página
         </h1>

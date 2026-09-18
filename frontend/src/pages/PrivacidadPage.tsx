@@ -102,7 +102,7 @@ export function PrivacidadPage() {
               {' '}a{' '}
               <a
                 href={`mailto:${contact.email}`}
-                className="text-brand-500 underline hover:text-brand-600"
+                className="text-brand-600 underline hover:text-brand-700"
               >
                 {contact.email}
               </a>
