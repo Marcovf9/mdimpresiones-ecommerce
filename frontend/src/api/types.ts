@@ -101,3 +101,14 @@ export interface ApiErrorBody {
   message: string
   fieldErrors?: Record<string, string>
 }
+
+export interface OpcionFiltro {
+  clave: string
+  etiqueta: string
+  cantidad: number
+}
+
+export interface FiltrosDisponibles {
+  terminaciones: OpcionFiltro[]
+  materiales: OpcionFiltro[]
+}

@@ -1,6 +1,7 @@
 import { useEffect, useState, type ReactNode } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { usePresupuesto } from '../hooks/usePresupuesto'
+import { imagenOptimizada } from '../api/imagenes'
 import { api } from '../api/client'
 import type { ContactInfo, ProductSummary } from '../api/types'
 import {
@@ -243,10 +244,20 @@ function SearchBox({ onNavigate }: { onNavigate: () => void }) {
                 navigate(`/productos/${product.slug}`)
                 onNavigate()
               }}
-              className="block w-full px-4 py-3 text-left transition hover:bg-white/10"
+              className="flex w-full items-center gap-3 px-4 py-3 text-left transition hover:bg-white/10"
             >
-              <span className="block text-ink-50">{product.name}</span>
-              <span className="block text-xs text-ink-300">{product.categoryName}</span>
+              {product.coverImageUrl && (
+                <img
+                  {...imagenOptimizada(product.coverImageUrl, 96)}
+                  alt=""
+                  loading="lazy"
+                  className="size-12 shrink-0 rounded bg-white/10 object-contain"
+                />
+              )}
+              <span className="min-w-0">
+                <span className="block truncate text-ink-50">{product.name}</span>
+                <span className="block text-xs text-ink-300">{product.categoryName}</span>
+              </span>
             </button>
           ))}
         </div>

@@ -1,6 +1,7 @@
 package com.moimpresiones.api.catalog;
 
 import com.moimpresiones.api.catalog.dto.CategoryDto;
+import com.moimpresiones.api.catalog.dto.FiltrosDisponibles;
 import com.moimpresiones.api.catalog.dto.ProductDetailDto;
 import com.moimpresiones.api.catalog.dto.ProductSummaryDto;
 import java.util.List;
@@ -23,9 +24,23 @@ public class CatalogController {
         return catalog.listCategoriesWithProducts();
     }
 
+    /**
+     * @param category  rubro
+     * @param finishing terminacion que tiene que admitir el producto
+     * @param material  papel con el que se hace
+     */
     @GetMapping("/products")
-    public List<ProductSummaryDto> products(@RequestParam(required = false) String category) {
-        return catalog.listProducts(category);
+    public List<ProductSummaryDto> products(
+            @RequestParam(required = false) String category,
+            @RequestParam(required = false) String finishing,
+            @RequestParam(required = false) String material) {
+        return catalog.listProducts(category, finishing, material);
+    }
+
+    /** Opciones de filtrado con su cantidad, para armar la barra de filtros. */
+    @GetMapping("/filters")
+    public FiltrosDisponibles filters(@RequestParam(required = false) String category) {
+        return catalog.filtrosDisponibles(category);
     }
 
     @GetMapping("/products/{slug}")

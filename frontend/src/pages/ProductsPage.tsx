@@ -1,13 +1,14 @@
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { api } from '../api/client'
-import type { Category, ProductSummary } from '../api/types'
+import type { Category, FiltrosDisponibles, ProductSummary } from '../api/types'
 import { useApi } from '../hooks/useApi'
 import { ArrowRightIcon, ChevronDownIcon } from '../components/Icons'
 import { PageHeader, ErrorState } from '../components/PageChrome'
 import { usePageMeta } from '../hooks/usePageMeta'
 import { SkeletonListadoProductos } from '../components/Skeletons'
 import { imagenOptimizada } from '../api/imagenes'
+import { FiltrosCatalogo, type FiltrosElegidos } from '../components/FiltrosCatalogo'
 
 /**
  * Listado de rubros.
@@ -21,6 +22,8 @@ import { imagenOptimizada } from '../api/imagenes'
  */
 export function ProductsPage() {
   const { data: categories, loading, error } = useApi<Category[]>(() => api.categories(), [])
+  const [filtros, setFiltros] = useState<FiltrosElegidos>({})
+  const hayFiltro = Boolean(filtros.finishing || filtros.material)
 
   usePageMeta({
     title: 'Productos',
@@ -43,15 +46,66 @@ export function ProductsPage() {
         description="Elegí un rubro para ver todo lo que producimos. Cada ficha incluye materiales, formatos y terminaciones disponibles."
       />
 
-      <div className="mx-auto mt-10 max-w-6xl px-6">
-        <AcordeonMovil categories={categories} />
-        <VistaEscritorio categories={categories} />
+      <div className="mx-auto mt-10 max-w-6xl space-y-6 px-6">
+        <BarraFiltros elegidos={filtros} onCambio={setFiltros} />
+      </div>
+
+      <div className="mx-auto mt-6 max-w-6xl px-6">
+        {hayFiltro ? (
+          <ResultadosFiltrados filtros={filtros} />
+        ) : (
+          <>
+            <AcordeonMovil categories={categories} />
+            <VistaEscritorio categories={categories} />
+          </>
+        )}
       </div>
     </div>
   )
 }
 
 /** Teléfono: acordeón que se abre y se cierra con el mismo toque. */
+/** Filtros por terminación y material, con la cantidad de cada opción. */
+function BarraFiltros({
+  elegidos,
+  onCambio,
+}: {
+  elegidos: FiltrosElegidos
+  onCambio: (elegidos: FiltrosElegidos) => void
+}) {
+  const { data: disponibles } = useApi<FiltrosDisponibles>(() => api.filtros(), [])
+  if (!disponibles) return null
+
+  return <FiltrosCatalogo disponibles={disponibles} elegidos={elegidos} onCambio={onCambio} />
+}
+
+/**
+ * Resultados de los filtros. Con algún filtro activo reemplaza a la navegación
+ * por rubros: mezclar las dos formas de recorrer el catálogo a la vez confunde
+ * más de lo que ayuda.
+ */
+function ResultadosFiltrados({ filtros }: { filtros: FiltrosElegidos }) {
+  const { data, loading } = useApi<ProductSummary[]>(
+    () => api.productosFiltrados(filtros),
+    [filtros.finishing, filtros.material],
+  )
+
+  return (
+    <section aria-live="polite">
+      <h2 className="mb-4 font-display text-lg font-semibold text-ink-900">
+        {loading ? 'Buscando...' : `${data?.length ?? 0} ${data?.length === 1 ? 'producto' : 'productos'}`}
+      </h2>
+      {!loading && data && data.length === 0 ? (
+        <p className="rounded-xl border border-dashed border-ink-300 px-6 py-8 text-center text-ink-500">
+          No hay productos con esa combinación. Probá con un solo filtro.
+        </p>
+      ) : (
+        data && <ProductGrid products={data} />
+      )}
+    </section>
+  )
+}
+
 function AcordeonMovil({ categories }: { categories: Category[] }) {
   // null es un estado válido: todos cerrados.
   const [abierto, setAbierto] = useState<string | null>(null)

@@ -3,6 +3,7 @@ import type {
   Category,
   ContactInfo,
   Finishing,
+  FiltrosDisponibles,
   ProductDetail,
   ProductSummary,
   QuoteAttachmentValues,
@@ -67,6 +68,17 @@ export const api = {
   finishings: () => request<Finishing[]>('/api/finishings'),
 
   contact: () => request<ContactInfo>('/api/contact'),
+
+  filtros: (category?: string) =>
+    request<FiltrosDisponibles>(`/api/filters${category ? `?category=${encodeURIComponent(category)}` : ''}`),
+
+  productosFiltrados: (filtros: { category?: string; finishing?: string; material?: string }) => {
+    const params = new URLSearchParams()
+    if (filtros.category) params.set('category', filtros.category)
+    if (filtros.finishing) params.set('finishing', filtros.finishing)
+    if (filtros.material) params.set('material', filtros.material)
+    return request<ProductSummary[]>(`/api/products?${params}`)
+  },
 
   createQuote: (values: QuoteFormValues) =>
     request<QuoteCreated>('/api/quotes', {
