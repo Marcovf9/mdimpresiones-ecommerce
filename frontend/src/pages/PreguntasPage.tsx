@@ -13,13 +13,60 @@ interface Pregunta {
 /**
  * Preguntas frecuentes.
  *
- * <p>Solo están las que se pueden responder con certeza: lo que sale de las
- * fichas técnicas del catálogo y de los términos y condiciones. Plazos de
- * entrega, envíos y si la imprenta hace el diseño quedaron afuera a propósito
- * hasta tener el dato del cliente: una respuesta inventada acá es algo que
- * después alguien reclama.
+ * <p>Todas las respuestas salen de datos reales: las fichas técnicas del
+ * catálogo, los términos y condiciones, y lo que confirmó el cliente sobre
+ * plazos, envíos y diseño. Nada acá es una respuesta de plantilla, porque una
+ * respuesta inventada es algo que después alguien reclama.
  */
 const PREGUNTAS: Pregunta[] = [
+  {
+    pregunta: '¿Cuánto tarda un trabajo?',
+    respuesta: (
+      <>
+        <p>
+          Depende mucho de qué sea: no es lo mismo 500 tarjetas que un libro de 200 páginas con
+          terminaciones especiales. La cantidad, el formato y los acabados cambian bastante el
+          tiempo de producción.
+        </p>
+        <p className="mt-2">
+          Por eso el plazo te lo confirmamos junto con el presupuesto, ya sabiendo qué hay que
+          hacer. Preferimos darte una fecha real antes que una estimación que después no se
+          cumple. Si tenés una fecha límite, contanosla desde el principio y te decimos si
+          llegamos.
+        </p>
+      </>
+    ),
+  },
+  {
+    pregunta: '¿Hacen envíos o tengo que retirar?',
+    respuesta: (
+      <>
+        <p>
+          Las dos cosas. <strong>Enviamos a todo el país</strong> y también podés retirar el
+          trabajo en el local, en José Javier Díaz 50, Córdoba.
+        </p>
+        <p className="mt-2">
+          El costo del envío depende del destino y del volumen del pedido: consultanos y te lo
+          pasamos junto con el presupuesto.
+        </p>
+      </>
+    ),
+  },
+  {
+    pregunta: '¿Ustedes hacen el diseño o tengo que traerlo hecho?',
+    respuesta: (
+      <>
+        <p>
+          Lo habitual es que el archivo venga listo para imprimir: así trabaja la gran mayoría de
+          nuestros clientes. No somos un estudio de diseño.
+        </p>
+        <p className="mt-2">
+          Dicho eso, si el trabajo es sencillo podemos resolverlo nosotros. Contanos qué necesitás
+          y te decimos si podemos hacerlo o si conviene que lo prepare un diseñador.
+        </p>
+      </>
+    ),
+  },
   {
     pregunta: '¿Cuál es la cantidad mínima?',
     respuesta: (
