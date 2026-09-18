@@ -67,7 +67,7 @@ class WhatsAppLinkBuilderTest {
     void avisaCuandoElClienteAdjuntoArchivos() {
         QuoteRequest quote = pedido(item("Estuches", "500", null));
         QuoteAttachment adjunto = new QuoteAttachment();
-        adjunto.setUrl("https://ejemplo/diseno.pdf");
+        adjunto.setStorageKey("adjuntos/abc-123.pdf");
         adjunto.setFilename("diseno.pdf");
         quote.addAttachment(adjunto);
 
