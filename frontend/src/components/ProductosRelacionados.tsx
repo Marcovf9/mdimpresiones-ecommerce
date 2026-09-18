@@ -54,7 +54,7 @@ export function ProductosRelacionados({
           <h2 className="font-display text-2xl font-semibold text-ink-900">
             Más de {categoryName}
           </h2>
-          <ul className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+          <ul className="mt-6 grid grid-cols-2 gap-2.5 sm:gap-4 lg:grid-cols-4">
             {otros.map((producto) => (
               <li key={producto.slug}>
                 <Link
@@ -71,8 +71,10 @@ export function ProductosRelacionados({
                       />
                     </div>
                   )}
-                  <span className="flex flex-1 items-center justify-between gap-2 p-4">
-                    <span className="text-sm font-medium text-ink-900">{producto.name}</span>
+                  <span className="flex flex-1 items-center justify-between gap-2 p-3 sm:p-4">
+                    <span className="text-xs leading-snug font-medium text-ink-900 sm:text-sm">
+                      {producto.name}
+                    </span>
                     <ArrowRightIcon className="size-4 shrink-0 text-brand-500 transition-transform group-hover:translate-x-1" />
                   </span>
                 </Link>
