@@ -7,6 +7,8 @@ import { api } from '../api/client'
 import type { Category } from '../api/types'
 import { useApi } from '../hooks/useApi'
 import { ImagenConCarga } from '../components/ImagenConCarga'
+import { ComoTrabajamos } from '../components/ComoTrabajamos'
+import { ComoLlegar } from '../components/ComoLlegar'
 import { useRevelarAlScroll } from '../hooks/useRevelarAlScroll'
 
 /**
@@ -81,6 +83,8 @@ export function HomePage() {
       </section>
 
       <RubrosDestacados />
+      <ComoTrabajamos />
+      <ComoLlegar />
     </>
   )
 }

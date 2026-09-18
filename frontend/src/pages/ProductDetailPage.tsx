@@ -83,6 +83,31 @@ export function ProductDetailPage() {
           </section>
         )}
 
+        {product.finishings.length > 0 && (
+          <section className="mt-12">
+            <h2 className="font-display text-xl font-semibold text-ink-900 sm:text-2xl">
+              Terminaciones disponibles
+            </h2>
+            <p className="mt-1 text-sm text-ink-500">Tocá cualquiera para ver de qué se trata.</p>
+            <ul className="mt-4 flex flex-wrap gap-2">
+              {product.finishings.map((terminacion) => (
+                <li key={terminacion.slug}>
+                  {/* La ficha técnica dice "OPP mate, UV sectorizado" y quien no
+                      es del rubro no sabe qué significa. Las nueve terminaciones
+                      ya están explicadas con foto: acá se enlazan. */}
+                  <Link
+                    to={`/terminaciones?ver=${encodeURIComponent(terminacion.slug)}`}
+                    className="inline-flex items-center gap-1.5 rounded-full border border-ink-300 px-3 py-2 text-sm text-ink-700 transition hover:border-ink-900 hover:text-ink-900"
+                  >
+                    {terminacion.name}
+                    <span aria-hidden="true" className="text-brand-500">?</span>
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </section>
+        )}
+
         <div className="mt-14 rounded-2xl bg-ink-900 px-8 py-10 text-center">
           <h2 className="font-display text-2xl font-semibold text-white sm:text-3xl">
             ¿Te interesa este producto?

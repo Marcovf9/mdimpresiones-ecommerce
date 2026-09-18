@@ -28,6 +28,7 @@ public class SitemapController {
             new String[] {"/productos", "0.9"},
             new String[] {"/terminaciones", "0.8"},
             new String[] {"/cotiza", "0.8"},
+            new String[] {"/preguntas-frecuentes", "0.6"},
             new String[] {"/terminos", "0.2"},
             new String[] {"/privacidad", "0.2"});
 

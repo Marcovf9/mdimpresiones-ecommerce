@@ -35,6 +35,7 @@ export interface ProductDetail {
   active: boolean
   images: ProductImage[]
   specs: ProductSpec[]
+  finishings: { slug: string; name: string }[]
 }
 
 export interface Category {
