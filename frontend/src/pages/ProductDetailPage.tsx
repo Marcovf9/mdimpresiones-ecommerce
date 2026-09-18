@@ -37,7 +37,7 @@ export function ProductDetailPage() {
   if (!product) return <ErrorState message="No encontramos ese producto." />
 
   return (
-    <article className="pt-24 pb-20">
+    <article className="pt-20 pb-14 sm:pt-24 sm:pb-20">
       <div className="mx-auto max-w-6xl px-6">
         <nav aria-label="Ruta de navegación" className="text-sm text-ink-500">
           <Link
@@ -52,7 +52,7 @@ export function ProductDetailPage() {
         </nav>
 
         <header className="mt-6">
-          <h1 className="font-display text-4xl font-semibold text-ink-900 sm:text-5xl">
+          <h1 className="font-display text-3xl font-semibold text-ink-900 sm:text-5xl">
             {product.name}
           </h1>
           {product.description && (

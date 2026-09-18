@@ -36,7 +36,7 @@ export function FinishingsPage() {
   }
 
   return (
-    <div className="pt-24 pb-20">
+    <div className="pt-20 pb-14 sm:pt-24 sm:pb-20">
       <PageHeader
         eyebrow="Acabados"
         title="Terminaciones"

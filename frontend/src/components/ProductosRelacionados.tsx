@@ -59,15 +59,17 @@ export function ProductosRelacionados({
               <li key={producto.slug}>
                 <Link
                   to={`/productos/${producto.slug}`}
-                  className="group flex h-full flex-col overflow-hidden rounded-xl border border-ink-100 bg-white transition hover:border-ink-900 hover:shadow-sm"
+                  className="group flex h-full flex-col overflow-hidden rounded-xl border border-ink-100 bg-white transition duration-300 hover:-translate-y-1 hover:border-ink-900 hover:shadow-lg"
                 >
                   {producto.coverImageUrl && (
-                    <img
-                      {...imagenOptimizada(producto.coverImageUrl, 400)}
-                      alt=""
-                      loading="lazy"
-                      className="aspect-[4/3] w-full bg-ink-50 object-contain"
-                    />
+                    <div className="overflow-hidden bg-ink-50">
+                      <img
+                        {...imagenOptimizada(producto.coverImageUrl, 400)}
+                        alt=""
+                        loading="lazy"
+                        className="aspect-[4/3] w-full object-contain transition duration-500 group-hover:scale-105"
+                      />
+                    </div>
                   )}
                   <span className="flex flex-1 items-center justify-between gap-2 p-4">
                     <span className="text-sm font-medium text-ink-900">{producto.name}</span>

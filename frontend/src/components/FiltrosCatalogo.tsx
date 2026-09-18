@@ -1,4 +1,6 @@
+import { useState } from 'react'
 import type { FiltrosDisponibles, OpcionFiltro } from '../api/types'
+import { ChevronDownIcon, FilterIcon } from './Icons'
 
 export interface FiltrosElegidos {
   finishing?: string
@@ -21,41 +23,69 @@ export function FiltrosCatalogo({
   elegidos: FiltrosElegidos
   onCambio: (elegidos: FiltrosElegidos) => void
 }) {
+  // Arranca plegado: desplegado ocupaba media pantalla antes de mostrar un
+  // solo producto, y en el celular empujaba todo el catálogo fuera de la vista.
+  const [abierto, setAbierto] = useState(false)
   const hayAlguno = Boolean(elegidos.finishing || elegidos.material)
+  const cuantos = (elegidos.finishing ? 1 : 0) + (elegidos.material ? 1 : 0)
 
   function alternar(campo: keyof FiltrosElegidos, clave: string) {
     onCambio({ ...elegidos, [campo]: elegidos[campo] === clave ? undefined : clave })
   }
 
   return (
-    <div className="rounded-2xl border border-ink-100 bg-white p-5">
-      <div className="flex flex-wrap items-center justify-between gap-3">
-        <h2 className="font-display text-sm font-semibold tracking-wide text-ink-900 uppercase">
-          Filtrar
-        </h2>
+    <div className="overflow-hidden rounded-2xl border border-ink-100 bg-white">
+      <div className="flex items-center gap-3 px-5">
+        <button
+          type="button"
+          onClick={() => setAbierto((v) => !v)}
+          aria-expanded={abierto}
+          aria-controls="panel-filtros"
+          className="flex flex-1 items-center gap-2 py-4 text-left"
+        >
+          <FilterIcon className="size-4 shrink-0 text-ink-500" />
+          <span className="font-display text-sm font-semibold tracking-wide text-ink-900 uppercase">
+            Filtrar
+          </span>
+          {/* Con el panel cerrado, el contador es la única señal de que hay
+              filtros puestos. */}
+          {cuantos > 0 && (
+            <span className="grid min-w-5 place-items-center rounded-full bg-brand-500 px-1.5 text-xs font-medium text-white">
+              {cuantos}
+            </span>
+          )}
+          <ChevronDownIcon
+            className={`ml-auto size-4 text-ink-500 transition-transform ${abierto ? 'rotate-180' : ''}`}
+          />
+        </button>
+
         {hayAlguno && (
           <button
             type="button"
             onClick={() => onCambio({})}
-            className="text-sm font-medium text-brand-500 transition hover:text-brand-600"
+            className="shrink-0 py-4 text-sm font-medium text-brand-500 transition hover:text-brand-600"
           >
-            Limpiar filtros
+            Limpiar
           </button>
         )}
       </div>
 
-      <Grupo
-        titulo="Por terminación"
-        opciones={disponibles.terminaciones}
-        elegida={elegidos.finishing}
-        onElegir={(clave) => alternar('finishing', clave)}
-      />
-      <Grupo
-        titulo="Por material"
-        opciones={disponibles.materiales}
-        elegida={elegidos.material}
-        onElegir={(clave) => alternar('material', clave)}
-      />
+      {abierto && (
+        <div id="panel-filtros" className="border-t border-ink-100 px-5 pt-1 pb-5">
+          <Grupo
+            titulo="Por terminación"
+            opciones={disponibles.terminaciones}
+            elegida={elegidos.finishing}
+            onElegir={(clave) => alternar('finishing', clave)}
+          />
+          <Grupo
+            titulo="Por material"
+            opciones={disponibles.materiales}
+            elegida={elegidos.material}
+            onElegir={(clave) => alternar('material', clave)}
+          />
+        </div>
+      )}
     </div>
   )
 }
