@@ -47,14 +47,14 @@ export function ProductsPage() {
   const rubro = rubroElegido ? categories.find((c) => c.slug === rubroElegido) : undefined
 
   return (
-    <div className="pt-24 pb-20">
+    <div className="pt-20 pb-14 sm:pt-24 sm:pb-20">
       <PageHeader
         eyebrow="Catálogo"
         title="Productos"
         description="Elegí un rubro para ver todo lo que producimos. Cada ficha incluye materiales, formatos y terminaciones disponibles."
       />
 
-      <div className="mx-auto mt-10 max-w-6xl space-y-6 px-6">
+      <div className="mx-auto mt-7 max-w-6xl sm:mt-10 space-y-6 px-6">
         <BarraFiltros elegidos={filtros} onCambio={setFiltros} />
       </div>
 
@@ -160,14 +160,14 @@ function AcordeonMovil({ categories }: { categories: Category[] }) {
               aria-expanded={estaAbierto}
               aria-controls={panelId}
               style={{ borderLeftColor: `var(--color-${color})` }}
-              className={`flex w-full items-center justify-between gap-4 rounded-xl border border-l-4 px-5 py-4 text-left transition ${
+              className={`flex w-full items-center justify-between gap-4 rounded-xl border border-l-4 px-4 py-3.5 text-left transition sm:px-5 sm:py-4 ${
                 estaAbierto
                   ? 'border-ink-900 bg-ink-900 text-white'
                   : 'border-ink-100 bg-white text-ink-900'
               }`}
             >
               <span>
-                <span className="block font-display text-lg font-semibold">{category.name}</span>
+                <span className="block font-display text-base font-semibold sm:text-lg">{category.name}</span>
                 <span className={`mt-0.5 block text-sm ${estaAbierto ? 'text-ink-100' : 'text-ink-500'}`}>
                   {category.products.length}{' '}
                   {category.products.length === 1 ? 'producto' : 'productos'}
@@ -214,14 +214,14 @@ function VistaEscritorio({ categories }: { categories: Category[] }) {
                 onClick={() => setElegido(category.slug)}
                 aria-current={isActive}
                 style={{ borderLeftColor: `var(--color-${color})` }}
-                className={`flex w-full items-center justify-between gap-4 rounded-xl border border-l-4 px-5 py-4 text-left transition ${
+                className={`flex w-full items-center justify-between gap-4 rounded-xl border border-l-4 px-4 py-3.5 text-left transition sm:px-5 sm:py-4 ${
                   isActive
                     ? 'border-ink-900 bg-ink-900 text-white'
                     : 'border-ink-100 bg-white text-ink-900 hover:border-ink-300'
                 }`}
               >
                 <span>
-                  <span className="block font-display text-xl font-semibold">{category.name}</span>
+                  <span className="block font-display text-lg font-semibold sm:text-xl">{category.name}</span>
                   <span className={`mt-1 block text-sm ${isActive ? 'text-ink-100' : 'text-ink-500'}`}>
                     {category.products.length}{' '}
                     {category.products.length === 1 ? 'producto' : 'productos'}
@@ -255,15 +255,17 @@ function ProductGrid({ products }: { products: ProductSummary[] }) {
         <li key={product.slug}>
           <Link
             to={`/productos/${product.slug}`}
-            className="group flex h-full flex-col overflow-hidden rounded-xl border border-ink-100 bg-white transition hover:border-ink-900 hover:shadow-sm"
+            className="group flex h-full flex-col overflow-hidden rounded-xl border border-ink-100 bg-white transition duration-300 hover:-translate-y-1 hover:border-ink-900 hover:shadow-lg"
           >
             {product.coverImageUrl && (
-              <img
-                {...imagenOptimizada(product.coverImageUrl, 560)}
-                alt=""
-                loading="lazy"
-                className="aspect-[4/3] w-full bg-ink-50 object-contain"
-              />
+              <div className="overflow-hidden bg-ink-50">
+                <img
+                  {...imagenOptimizada(product.coverImageUrl, 560)}
+                  alt=""
+                  loading="lazy"
+                  className="aspect-[4/3] w-full object-contain transition duration-500 group-hover:scale-105"
+                />
+              </div>
             )}
             <span className="flex flex-1 flex-col justify-between gap-3 p-5">
               <span>

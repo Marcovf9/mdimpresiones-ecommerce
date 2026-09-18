@@ -14,7 +14,7 @@ export function LegalPage({
   const fiscal = identificacionFiscal()
 
   return (
-    <div className="pt-24 pb-20">
+    <div className="pt-20 pb-14 sm:pt-24 sm:pb-20">
       <article className="mx-auto max-w-3xl px-6">
         <h1 className="font-display text-4xl font-semibold text-ink-900">{title}</h1>
         <p className="mt-3 text-sm text-ink-500">Última actualización: {updatedAt}</p>

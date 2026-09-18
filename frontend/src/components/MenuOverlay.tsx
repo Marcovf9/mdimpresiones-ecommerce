@@ -89,7 +89,7 @@ export function MenuOverlay({ open, onClose, contact }: MenuOverlayProps) {
               onClick={() => setProductosOpen((valor) => !valor)}
               aria-expanded={productosOpen}
               aria-controls="menu-rubros"
-              className="flex w-full items-center justify-between border-b border-white/10 py-4 font-display text-2xl text-ink-50 transition hover:text-brand-500"
+              className="flex w-full items-center justify-between border-b border-white/10 py-3.5 font-display text-xl text-ink-50 transition hover:text-brand-500 sm:py-4 sm:text-2xl"
             >
               Productos
               <ChevronDownIcon
@@ -132,7 +132,7 @@ export function MenuOverlay({ open, onClose, contact }: MenuOverlayProps) {
               type="button"
               onClick={() => setContactOpen((value) => !value)}
               aria-expanded={contactOpen}
-              className="flex w-full items-center justify-between border-b border-white/10 py-4 font-display text-2xl text-ink-50 transition hover:text-brand-500"
+              className="flex w-full items-center justify-between border-b border-white/10 py-3.5 font-display text-xl text-ink-50 transition hover:text-brand-500 sm:py-4 sm:text-2xl"
             >
               Contacto
               <ChevronDownIcon
@@ -146,7 +146,7 @@ export function MenuOverlay({ open, onClose, contact }: MenuOverlayProps) {
             <Link
               to="/cotiza"
               onClick={onClose}
-              className="flex items-center justify-between gap-3 border-b border-white/10 py-4 text-lg text-white transition hover:text-brand-500"
+              className="flex items-center justify-between gap-3 border-b border-white/10 py-3.5 font-display text-xl text-ink-50 transition hover:text-brand-500 sm:py-4 sm:text-2xl"
             >
               Cotizá tu producto
               {/* El contador avisa que hay un pedido a medio armar. */}
@@ -169,7 +169,7 @@ function MenuLink({ to, onClick, children }: { to: string; onClick: () => void; 
       <Link
         to={to}
         onClick={onClick}
-        className="block border-b border-white/10 py-4 font-display text-2xl transition hover:text-brand-500"
+        className="block border-b border-white/10 py-3.5 font-display text-xl transition hover:text-brand-500 sm:py-4 sm:text-2xl"
       >
         {children}
       </Link>

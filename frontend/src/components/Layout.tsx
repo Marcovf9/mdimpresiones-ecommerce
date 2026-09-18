@@ -38,14 +38,26 @@ export function Layout() {
         }`}
       >
         <div className="mx-auto flex max-w-6xl items-center justify-between px-6 py-4">
-          {/* El cliente pidió sacar el logo de acá. Queda el enlace al inicio,
-              sin marca visible: la esquina superior izquierda es donde se
-              espera poder volver, y el menú también tiene Inicio. */}
+          {/* El logo aparece recién cuando el encabezado se vuelve sólido: sobre
+              la foto de portada estorbaba, pero en el resto del sitio la marca
+              tiene que estar. El enlace ocupa su lugar aunque el logo no se vea,
+              para que la vuelta al inicio no aparezca y desaparezca. */}
           <Link
             to="/"
             aria-label="Ir al inicio"
-            className="size-11 rounded-full transition hover:bg-white/10"
-          />
+            className="flex h-11 items-center rounded-lg px-1 transition hover:bg-white/10"
+          >
+            <img
+              src="/imagenes/logo.png"
+              alt="MO Impresiones"
+              width={600}
+              height={313}
+              aria-hidden={!solid}
+              className={`h-8 w-auto transition-opacity duration-300 sm:h-9 ${
+                solid ? 'opacity-100' : 'opacity-0'
+              }`}
+            />
+          </Link>
           <button
             type="button"
             onClick={() => setMenuOpen(true)}

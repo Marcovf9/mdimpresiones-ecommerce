@@ -2,7 +2,11 @@ import { useEffect } from 'react'
 import { Link, useLocation } from 'react-router-dom'
 import { ArrowRightIcon } from '../components/Icons'
 import { usePageMeta } from '../hooks/usePageMeta'
-import { BarraCMYK } from '../components/BarraCMYK'
+import { BarraCMYK, colorDeRubro } from '../components/BarraCMYK'
+import { api } from '../api/client'
+import type { Category } from '../api/types'
+import { useApi } from '../hooks/useApi'
+import { imagenOptimizada } from '../api/imagenes'
 import { useRevelarAlScroll } from '../hooks/useRevelarAlScroll'
 
 /**
@@ -39,7 +43,7 @@ export function HomePage() {
     <>
       <Hero />
 
-      <section id="quienes-somos" data-revelar className="scroll-mt-20 py-20 sm:py-28">
+      <section id="quienes-somos" data-revelar className="scroll-mt-20 py-14 sm:py-28">
         <div className="mx-auto max-w-3xl px-6">
           <p className="font-display text-sm tracking-[0.3em] text-brand-500 uppercase">
             Nuestra historia
@@ -75,7 +79,75 @@ export function HomePage() {
           </div>
         </div>
       </section>
+
+      <RubrosDestacados />
     </>
+  )
+}
+
+/**
+ * Qué imprimen, en la portada. Antes la página de inicio terminaba en la
+ * historia de la empresa y nunca mostraba el trabajo: quien llegaba tenía que
+ * entrar al menú para enterarse de qué se hace acá.
+ */
+function RubrosDestacados() {
+  const { data: categories } = useApi<Category[]>(() => api.categories(), [])
+  useRevelarAlScroll([categories])
+
+  if (!categories || categories.length === 0) return null
+
+  return (
+    <section className="border-t border-ink-100 py-14 sm:py-24">
+      <div className="mx-auto max-w-6xl px-6">
+        <BarraCMYK className="max-w-24" />
+        <h2 className="mt-3 font-display text-3xl font-semibold text-ink-900 sm:text-4xl">
+          Qué imprimimos
+        </h2>
+        <p className="mt-2 max-w-2xl text-ink-500">
+          Seis familias de productos, cada una con sus materiales, formatos y terminaciones.
+        </p>
+
+        <ul className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          {categories.map((category, indice) => {
+            const portada = category.products.find((p) => p.coverImageUrl)?.coverImageUrl
+            return (
+              <li key={category.slug} data-revelar data-retraso={String((indice % 3) + 1)}>
+                <Link
+                  to={`/productos?rubro=${encodeURIComponent(category.slug)}`}
+                  className="group flex h-full flex-col overflow-hidden rounded-2xl border border-ink-100 bg-white transition duration-300 hover:-translate-y-1 hover:border-ink-900 hover:shadow-lg"
+                >
+                  <div className="overflow-hidden bg-ink-50">
+                    {portada ? (
+                      <img
+                        {...imagenOptimizada(portada, 520)}
+                        alt=""
+                        loading="lazy"
+                        className="aspect-[4/3] w-full object-contain transition duration-500 group-hover:scale-105"
+                      />
+                    ) : (
+                      <div className="aspect-[4/3] w-full" />
+                    )}
+                  </div>
+                  <div
+                    className="border-t-4 p-5"
+                    style={{ borderTopColor: `var(--color-${colorDeRubro(indice)})` }}
+                  >
+                    <h3 className="font-display text-lg font-semibold text-ink-900">
+                      {category.name}
+                    </h3>
+                    <p className="mt-1 line-clamp-2 text-sm text-ink-500">{category.description}</p>
+                    <span className="mt-3 inline-flex items-center gap-1 text-sm font-medium text-brand-500">
+                      Ver los {category.products.length}
+                      <ArrowRightIcon className="size-4 transition-transform group-hover:translate-x-1" />
+                    </span>
+                  </div>
+                </Link>
+              </li>
+            )
+          })}
+        </ul>
+      </div>
+    </section>
   )
 }
 
@@ -107,11 +179,11 @@ function Hero() {
       <div className="absolute inset-0 bg-gradient-to-b from-ink-900/75 via-ink-900/65 to-ink-900" />
 
       <div className="relative px-6 text-center">
-        <h1 className="font-display text-5xl font-semibold tracking-tight text-white sm:text-7xl lg:text-8xl">
+        <h1 className="font-display text-4xl font-semibold tracking-tight text-white sm:text-7xl lg:text-8xl">
           MO Impresiones
         </h1>
         <BarraCMYK className="mx-auto mt-6 max-w-40" grosor="gruesa" />
-        <p className="mx-auto mt-6 max-w-xl text-lg text-ink-100">
+        <p className="mx-auto mt-5 max-w-xl text-ink-100 sm:mt-6 sm:text-lg">
           Imprenta en Córdoba, Argentina. Más de 30 años de oficio gráfico,
           del pliego a la terminación final.
         </p>

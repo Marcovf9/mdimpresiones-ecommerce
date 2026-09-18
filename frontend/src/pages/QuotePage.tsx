@@ -101,14 +101,14 @@ export function QuotePage() {
   const sinProductos = items.length === 0
 
   return (
-    <div className="pt-24 pb-20">
+    <div className="pt-20 pb-14 sm:pt-24 sm:pb-20">
       <PageHeader
         eyebrow="Presupuestos"
         title="Cotizá tu proyecto"
         description="Agregá todo lo que necesites y te respondemos con un presupuesto a medida. Al enviar se abre WhatsApp con tu consulta ya escrita."
       />
 
-      <form onSubmit={handleSubmit} className="mx-auto mt-10 max-w-3xl space-y-6 px-6">
+      <form onSubmit={handleSubmit} className="mx-auto mt-7 max-w-3xl sm:mt-10 space-y-6 px-6">
         <section className="rounded-2xl border border-ink-100 bg-white p-6">
           <div className="flex flex-wrap items-center justify-between gap-3">
             <h2 className="font-display text-xl font-semibold text-ink-900">
