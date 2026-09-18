@@ -31,6 +31,13 @@ public class Product {
     @Column(columnDefinition = "text")
     private String description;
 
+    /**
+     * Texto derivado para el buscador, en minusculas y sin tildes. Lo mantiene
+     * la base con disparadores, asi que aca es de solo lectura.
+     */
+    @Column(name = "search_text", insertable = false, updatable = false, columnDefinition = "text")
+    private String searchText;
+
     @Column(name = "display_order", nullable = false)
     private int displayOrder;
 
@@ -50,6 +57,14 @@ public class Product {
     @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
     @OrderBy("displayOrder ASC, id ASC")
     private List<ProductImage> images = new ArrayList<>();
+
+    /** Terminaciones que admite este producto. Alimenta el filtro del catalogo. */
+    @ManyToMany
+    @JoinTable(name = "product_finishings",
+            joinColumns = @JoinColumn(name = "product_id"),
+            inverseJoinColumns = @JoinColumn(name = "finishing_id"))
+    @OrderBy("displayOrder ASC")
+    private List<com.moimpresiones.api.finishing.Finishing> finishings = new ArrayList<>();
 
     @PreUpdate
     void onUpdate() {
@@ -114,6 +129,10 @@ public class Product {
         this.description = description;
     }
 
+    public String getSearchText() {
+        return searchText;
+    }
+
     public int getDisplayOrder() {
         return displayOrder;
     }
@@ -152,6 +171,14 @@ public class Product {
 
     public void setSpecs(List<ProductSpec> specs) {
         this.specs = specs;
+    }
+
+    public List<com.moimpresiones.api.finishing.Finishing> getFinishings() {
+        return finishings;
+    }
+
+    public void setFinishings(List<com.moimpresiones.api.finishing.Finishing> finishings) {
+        this.finishings = finishings;
     }
 
     public List<ProductImage> getImages() {
