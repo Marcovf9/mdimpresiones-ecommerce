@@ -1,9 +1,10 @@
 import { useEffect, useState, type ReactNode } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { usePresupuesto } from '../hooks/usePresupuesto'
+import { useApi } from '../hooks/useApi'
 import { imagenOptimizada } from '../api/imagenes'
 import { api } from '../api/client'
-import type { ContactInfo, ProductSummary } from '../api/types'
+import type { Category, ContactInfo, ProductSummary } from '../api/types'
 import {
   ChevronDownIcon,
   CloseIcon,
@@ -25,11 +26,18 @@ interface MenuOverlayProps {
  */
 export function MenuOverlay({ open, onClose, contact }: MenuOverlayProps) {
   const [contactOpen, setContactOpen] = useState(false)
+  const [productosOpen, setProductosOpen] = useState(false)
   const { items } = usePresupuesto()
+  // Solo se piden al abrir el menú: no hace falta cargarlos en cada pantalla.
+  const { data: rubros } = useApi<Category[]>(
+    () => (open ? api.categories() : Promise.resolve([])),
+    [open],
+  )
 
   useEffect(() => {
     if (!open) {
       setContactOpen(false)
+      setProductosOpen(false)
       return
     }
     const onKeyDown = (event: KeyboardEvent) => {
@@ -75,7 +83,48 @@ export function MenuOverlay({ open, onClose, contact }: MenuOverlayProps) {
         <ul className="mt-8 flex-1 space-y-1 px-6 pb-10">
           <MenuLink to="/" onClick={onClose}>Inicio</MenuLink>
           <MenuLink to="/#quienes-somos" onClick={onClose}>¿Quiénes somos?</MenuLink>
-          <MenuLink to="/productos" onClick={onClose}>Productos</MenuLink>
+          <li>
+            <button
+              type="button"
+              onClick={() => setProductosOpen((valor) => !valor)}
+              aria-expanded={productosOpen}
+              aria-controls="menu-rubros"
+              className="flex w-full items-center justify-between border-b border-white/10 py-4 font-display text-2xl text-ink-50 transition hover:text-brand-500"
+            >
+              Productos
+              <ChevronDownIcon
+                className={`size-5 transition-transform ${productosOpen ? 'rotate-180' : ''}`}
+              />
+            </button>
+
+            {productosOpen && (
+              <ul id="menu-rubros" className="border-b border-white/10 py-2">
+                {/* Cada rubro entra directo a su listado, sin pasar por la
+                    pantalla intermedia ni obligar a bajar buscándolo. */}
+                {(rubros ?? []).map((rubro) => (
+                  <li key={rubro.slug}>
+                    <Link
+                      to={`/productos?rubro=${encodeURIComponent(rubro.slug)}`}
+                      onClick={onClose}
+                      className="flex items-center justify-between gap-3 py-2.5 pl-4 text-ink-100 transition hover:text-brand-500"
+                    >
+                      {rubro.name}
+                      <span className="text-xs text-ink-300">{rubro.products.length}</span>
+                    </Link>
+                  </li>
+                ))}
+                <li>
+                  <Link
+                    to="/productos"
+                    onClick={onClose}
+                    className="block py-2.5 pl-4 text-sm text-ink-300 underline transition hover:text-brand-500"
+                  >
+                    Ver todo el catálogo
+                  </Link>
+                </li>
+              </ul>
+            )}
+          </li>
           <MenuLink to="/terminaciones" onClick={onClose}>Terminaciones</MenuLink>
 
           <li>

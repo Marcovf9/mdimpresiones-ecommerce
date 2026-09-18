@@ -6,6 +6,7 @@ import { MenuOverlay } from './MenuOverlay'
 import { useTrackPageView } from '../hooks/useTrackPageView'
 import { WhatsAppFab } from './WhatsAppFab'
 import { StructuredData } from './StructuredData'
+import { BarraCMYK } from './BarraCMYK'
 import { domicilioCompleto, EMPRESA } from '../config/empresa'
 
 export function Layout() {
@@ -37,15 +38,14 @@ export function Layout() {
         }`}
       >
         <div className="mx-auto flex max-w-6xl items-center justify-between px-6 py-4">
-          <Link to="/" aria-label="MO Impresiones — ir al inicio" className="-my-1 inline-block py-1">
-            <img
-              src="/imagenes/logo.png"
-              alt="MO Impresiones"
-              width={600}
-              height={313}
-              className="h-9 w-auto sm:h-10"
-            />
-          </Link>
+          {/* El cliente pidió sacar el logo de acá. Queda el enlace al inicio,
+              sin marca visible: la esquina superior izquierda es donde se
+              espera poder volver, y el menú también tiene Inicio. */}
+          <Link
+            to="/"
+            aria-label="Ir al inicio"
+            className="size-11 rounded-full transition hover:bg-white/10"
+          />
           <button
             type="button"
             onClick={() => setMenuOpen(true)}
@@ -76,6 +76,7 @@ function SiteFooter() {
 
   return (
     <footer className="bg-ink-900 text-ink-300">
+        <BarraCMYK className="rounded-none" grosor="gruesa" />
       <div className="mx-auto grid max-w-6xl gap-8 px-6 py-12 sm:grid-cols-2">
         <div>
           <img

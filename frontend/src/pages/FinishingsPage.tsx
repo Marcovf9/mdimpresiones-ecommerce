@@ -4,7 +4,9 @@ import type { Finishing } from '../api/types'
 import { useApi } from '../hooks/useApi'
 import { Modal } from '../components/Modal'
 import { ErrorState, PageHeader } from '../components/PageChrome'
+import type React from 'react'
 import { usePageMeta } from '../hooks/usePageMeta'
+import { colorDeRubro } from '../components/BarraCMYK'
 import { useRevelarAlScroll } from '../hooks/useRevelarAlScroll'
 import { SkeletonTerminaciones } from '../components/Skeletons'
 import { imagenOptimizada } from '../api/imagenes'
@@ -43,13 +45,20 @@ export function FinishingsPage() {
 
       <ul className="mx-auto mt-12 grid max-w-6xl gap-6 px-6 sm:grid-cols-2 lg:grid-cols-3">
         {finishings.map((finishing, index) => (
-          <li key={finishing.slug} data-revelar data-retraso={String((index % 3) + 1)}>
+          <li
+            key={finishing.slug}
+            data-revelar
+            data-retraso={String((index % 3) + 1)}
+            style={{ '--acento': `var(--color-${colorDeRubro(index)})` } as React.CSSProperties}
+          >
             <button
               type="button"
               onClick={() => setSelected(finishing)}
               className="group w-full text-left"
             >
-              <div className="overflow-hidden rounded-2xl bg-ink-100">
+              {/* El borde toma el color del rubro al pasar por encima: el acento
+                  aparece solo en la interacción, sin cargar la grilla. */}
+              <div className="overflow-hidden rounded-2xl border-2 border-transparent bg-ink-100 transition-colors group-hover:border-[var(--acento)]">
                 {finishing.imageUrl ? (
                   <img
                     {...imagenOptimizada(finishing.imageUrl, 480)}
